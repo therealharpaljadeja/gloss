@@ -3,7 +3,6 @@
  * answers and briefs actually cost on Fortytwo, up to a small amount a day
  * (more when signed in). After that they bring their own key, which is never
  * counted. A ceiling across everyone keeps a rush of visitors bounded.
- * Reading aloud is never free: it uses the reader's own key.
  *
  * Spent per day in Postgres, so the limit holds across serverless instances.
  * Signed-out readers are counted by a hash of their address. Without a
