@@ -5,13 +5,12 @@ import { Keyboard, NotebookPen } from "lucide-react";
 import { Account } from "@/components/account/Account";
 import { Lockup } from "@/components/brand/Gloss";
 import { KeyMenu } from "@/components/ui/KeyMenu";
-import { ListenButton } from "./Listen";
 import { SettingsMenu } from "@/components/ui/SettingsMenu";
 import { barBtn } from "@/components/ui/Popover";
 import { useGlosses, useHighlights, useStore } from "@/lib/store";
 import { useReader } from "./context";
 
-export function TopBar({ currentN, pastTitle, listenFrom }: { currentN: number | null; pastTitle: boolean; listenFrom: () => string | null }) {
+export function TopBar({ currentN, pastTitle }: { currentN: number | null; pastTitle: boolean }) {
   const { ix, jumpTo } = useReader();
   const [hidden, setHidden] = useState(false);
   const [scrolledUp, setScrolledUp] = useState(false);
@@ -121,7 +120,6 @@ export function TopBar({ currentN, pastTitle, listenFrom }: { currentN: number |
               <Keyboard size={17} strokeWidth={1.8} />
             </button>
           </span>
-          <ListenButton from={listenFrom} />
           <SettingsMenu />
           <KeyMenu />
           <button

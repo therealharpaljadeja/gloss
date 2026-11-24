@@ -48,9 +48,6 @@ export async function pushRows(userId: string, changes: Partial<Record<Collectio
   const queries = Object.entries(changes)
     .filter(([t, rows]) => isCollection(t) && rows?.length)
     .map(([t, rows]) => sql.query(upsert(t as Collection), [userId, JSON.stringify(rows)]));
-  // A text taken off the shelf takes its painted cover with it.
-  const gone = (changes.articles ?? []).filter((r) => r.deleted).map((r) => r.id);
-  if (gone.length) queries.push(sql.query("delete from covers where user_id = $1 and id = any($2::text[])", [userId, gone]));
   if (queries.length) await sql.transaction(queries);
 }
 
@@ -70,21 +67,6 @@ function upsert(table: Collection): string {
       article_id = excluded.article_id, data = excluded.data, deleted = excluded.deleted, updated_at = now()${
         isArticles ? ", doc = case when excluded.deleted then null else coalesce(excluded.doc, articles.doc) end" : ""
       }`;
-}
-
-/* ---------- painted covers ---------- */
-
-export async function saveCover(userId: string, id: string, jpeg: Uint8Array): Promise<void> {
-  await db().query(
-    `insert into covers (user_id, id, jpeg) values ($1, $2, $3)
-     on conflict (user_id, id) do update set jpeg = excluded.jpeg, created_at = now()`,
-    [userId, id, Buffer.from(jpeg).toString("base64")]
-  );
-}
-
-export async function loadCover(userId: string, id: string): Promise<Uint8Array | null> {
-  const rows = await db().query("select jpeg from covers where user_id = $1 and id = $2", [userId, id]);
-  return rows.length ? Uint8Array.from(Buffer.from(String(rows[0].jpeg), "base64")) : null;
 }
 
 /* ---------- agent tokens ---------- */

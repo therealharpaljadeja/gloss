@@ -1,15 +1,15 @@
 /**
- * Together AI client. Server-side only. Raw fetch, OpenAI-compatible SSE.
+ * Fortytwo client. Server-side only. Raw fetch, OpenAI-compatible SSE.
  *
- * Things learned the hard way, kept on purpose:
- * 1. A named User-Agent. Together's WAF has 403'd the default undici agent.
+ * Kept on purpose:
+ * 1. A named User-Agent, so requests are identifiable.
  * 2. stream_options.include_usage, so the cost receipt is real, not a guess.
  * 3. Errors come back as JSON: surface error.message, not the raw body.
- * 4. enable_thinking:false keeps reasoners from spending the budget thinking.
- *    Verified per model on 2026-10-08 with the full sample article (11k tokens).
+ * 4. reasoning_effort:"none" keeps reasoners from spending the budget thinking.
  */
 
-export const TOGETHER_URL = "https://api.together.xyz/v1/chat/completions";
+export const FORTYTWO_API = "https://api.fortytwo.network/v1";
+export const FORTYTWO_URL = `${FORTYTWO_API}/chat/completions`;
 export const APP_UA = "Gloss/0.1";
 
 import { MODELS, costFor, type ModelEntry, type ModelKey, type StreamEvent, type Usage } from "./models";
@@ -24,7 +24,7 @@ export type ChatMessage =
   | { role: "tool"; content: string; tool_call_id: string };
 
 type Chunk = {
-  choices?: { delta?: { content?: string; reasoning_content?: string; tool_calls?: { index: number; id?: string; function?: { name?: string; arguments?: string } }[] } }[];
+  choices?: { delta?: { content?: string; reasoning?: string; reasoning_content?: string; tool_calls?: { index: number; id?: string; function?: { name?: string; arguments?: string } }[] } }[];
   usage?: {
     prompt_tokens?: number;
     completion_tokens?: number;
@@ -42,9 +42,10 @@ function errorMessage(status: number, body: string): string {
   } catch {
     /* not JSON */
   }
-  if (status === 401) return "Together rejected that API key. Check it and try again.";
-  if (status === 429) return "Together is rate limiting this key. Wait a moment, or use your own key.";
-  return `Together API ${status}: ${msg}`;
+  if (status === 401) return "Fortytwo rejected that API key. Check it and try again.";
+  if (status === 402) return "This Fortytwo key is out of credits. Top it up, or use another key.";
+  if (status === 429) return "Fortytwo is rate limiting this key. Wait a moment, or use your own key.";
+  return `Fortytwo API ${status}: ${msg}`;
 }
 
 export async function* streamChat(req: {
@@ -60,9 +61,9 @@ export async function* streamChat(req: {
   toolChoice?: "auto" | "none";
 }): AsyncGenerator<StreamEvent> {
   const model: ModelEntry = MODELS[req.model];
-  const apiKey = req.apiKey?.trim() || process.env.TOGETHER_API_KEY;
+  const apiKey = req.apiKey?.trim() || process.env.FORTYTWO_API_KEY;
   if (!apiKey) {
-    yield { type: "error", text: "No Together API key. Set TOGETHER_API_KEY, or add your own key." };
+    yield { type: "error", text: "No Fortytwo API key. Set FORTYTWO_API_KEY, or add your own key." };
     return;
   }
 
@@ -70,7 +71,7 @@ export async function* streamChat(req: {
 
   let res: Response;
   try {
-    res = await fetch(TOGETHER_URL, {
+    res = await fetch(FORTYTWO_URL, {
       method: "POST",
       signal: req.signal,
       headers: {
@@ -84,14 +85,14 @@ export async function* streamChat(req: {
         stream_options: { include_usage: true },
         temperature: req.temperature ?? 0.4,
         max_tokens: req.maxTokens ?? 900,
-        chat_template_kwargs: { enable_thinking: false },
+        reasoning_effort: "none",
         messages: req.messages,
         ...(req.tools ? { tools: req.tools, tool_choice: req.toolChoice ?? "auto" } : {}),
       }),
     });
   } catch (e) {
     if (req.signal?.aborted) return;
-    yield { type: "error", text: `Could not reach Together: ${String(e)}` };
+    yield { type: "error", text: `Could not reach Fortytwo: ${String(e)}` };
     return;
   }
 
@@ -135,7 +136,7 @@ export async function* streamChat(req: {
         continue;
       }
       const delta = chunk.choices?.[0]?.delta;
-      if (delta?.reasoning_content) sawReasoning = true;
+      if (delta?.reasoning || delta?.reasoning_content) sawReasoning = true;
       for (const tc of delta?.tool_calls ?? []) {
         const c = (calls[tc.index] ??= { id: "", name: "", args: "" });
         if (tc.id) c.id = tc.id;
@@ -171,12 +172,12 @@ export async function completeJSON<T>(req: {
   thinking?: boolean;
 }): Promise<{ ok: true; data: T; usage: Usage } | { ok: false; error: string }> {
   const model: ModelEntry = MODELS[req.model];
-  const apiKey = req.apiKey?.trim() || process.env.TOGETHER_API_KEY;
-  if (!apiKey) return { ok: false, error: "No Together API key. Set TOGETHER_API_KEY, or add your own key." };
+  const apiKey = req.apiKey?.trim() || process.env.FORTYTWO_API_KEY;
+  if (!apiKey) return { ok: false, error: "No Fortytwo API key. Set FORTYTWO_API_KEY, or add your own key." };
 
   let res: Response;
   try {
-    res = await fetch(TOGETHER_URL, {
+    res = await fetch(FORTYTWO_URL, {
       method: "POST",
       signal: req.signal,
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}`, "User-Agent": APP_UA },
@@ -184,13 +185,13 @@ export async function completeJSON<T>(req: {
         model: model.id,
         temperature: 0.3,
         max_tokens: req.maxTokens ?? 1400,
-        chat_template_kwargs: { enable_thinking: Boolean(req.thinking) },
+        reasoning_effort: req.thinking ? "low" : "none",
         response_format: { type: "json_object" },
         messages: req.messages,
       }),
     });
   } catch (e) {
-    return { ok: false, error: `Could not reach Together: ${String(e)}` };
+    return { ok: false, error: `Could not reach Fortytwo: ${String(e)}` };
   }
   const body = await res.text();
   if (!res.ok) return { ok: false, error: errorMessage(res.status, body) };

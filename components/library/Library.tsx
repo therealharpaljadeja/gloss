@@ -6,7 +6,6 @@ import { startTransition, useCallback, useEffect, useMemo, useRef, useState, Vie
 import { ChevronLeft, ChevronRight, LayoutGrid, Library as LibraryIcon, Search, X } from "lucide-react";
 import { TopBar } from "@/components/ui/TopBar";
 import { readingMinutes, tidyTitle, wordCount } from "@/lib/article";
-import { forgetCover, paintAll } from "@/lib/covers";
 import { SAMPLE_SHELF } from "@/lib/classics";
 import { SORTS, sortBooks, TAGS, TOPIC, TOPICS, topicOf, type Book, type Sort, type TagKey, type Topic, type TopicKey } from "@/lib/library";
 import { hideSample, useLibraryPrefs } from "@/lib/library-prefs";
@@ -127,11 +126,6 @@ export function Library() {
   useEffect(() => {
     if (hydrated) void backfill(useStore.getState().library);
   }, [hydrated, library.length]);
-
-  // Painted covers, when they're turned on: one at a time, for every sorted text without one.
-  useEffect(() => {
-    if (hydrated && prefs.paintedCovers) void paintAll(useStore.getState().library);
-  }, [hydrated, prefs.paintedCovers, library]);
 
   const own = library.filter((x) => x.origin !== "sample");
   const books = useMemo(() => {
@@ -418,7 +412,6 @@ export function Library() {
             setOpen(null);
             if (b.sample) return hideSample(b.id);
             removeFromLibrary(b.id);
-            void forgetCover(b.id);
           }}
           onClose={() => {
             const id = open.id;
@@ -444,10 +437,7 @@ export function Library() {
           onRemove={() => {
             closeWave();
             if (open && wave.ids.includes(open.id)) setOpen(null);
-            for (const id of wave.ids) {
-              removeFromLibrary(id);
-              void forgetCover(id);
-            }
+            for (const id of wave.ids) removeFromLibrary(id);
           }}
         />
       )}

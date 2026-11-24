@@ -98,7 +98,7 @@ export type Book = {
   finished?: number;
   /** The page's own picture, shown duotone. */
   image?: string;
-  /** A painted cover: a bundled one by path, or "painted" for one made for you. */
+  /** A bundled cover, by path. */
   cover?: string;
   /** Saved by an agent rather than by hand. */
   agent: boolean;
@@ -265,7 +265,7 @@ export function yearOf(published?: string): number | undefined {
 
 /* ---------- what the classifier returns ---------- */
 
-export type Shelving = { topic: TopicKey; tags: string[]; scene?: string };
+export type Shelving = { topic: TopicKey; tags: string[] };
 
 /** Tags: a few short lowercase words, never the topic's own name. */
 export function cleanTags(v: unknown, topic: TopicKey): string[] {

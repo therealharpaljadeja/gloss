@@ -1,7 +1,6 @@
 "use client";
 
 import { memo, useEffect, useState } from "react";
-import { paintedUrl } from "@/lib/covers";
 import { iconSrc, lookOf, TOPIC, topicArtSrc, type Book, type Look, type TagKey, type TopicKey } from "@/lib/library";
 
 /** One of the library's own emoji: a small clay figure for a topic or a tag. */
@@ -61,26 +60,16 @@ export const Spine = memo(function Spine({ book, look = lookOf(book) }: { book: 
 });
 
 /**
- * The picture on a cover, best first: a painted cover (bundled, or painted for
- * this text), then the page's own picture printed in the topic's ink, then the
+ * The picture on a cover, best first: a bundled cover, then the page's own picture printed in the topic's ink, then the
  * topic's plate.
  */
 export function Plate({ book, reveal = false }: { book: Book; reveal?: boolean }) {
-  const [painted, setPainted] = useState<string | null>(null);
   const [broken, setBroken] = useState(false);
-  useEffect(() => {
-    if (book.cover !== "painted") return;
-    let live = true;
-    void paintedUrl(book.id).then((u) => live && setPainted(u));
-    return () => {
-      live = false;
-    };
-  }, [book.id, book.cover]);
 
   const cls = reveal ? "is-revealing" : "";
-  if (book.cover?.startsWith("/") || painted) {
+  if (book.cover?.startsWith("/")) {
     // eslint-disable-next-line @next/next/no-img-element
-    return <img src={painted ?? book.cover} alt="" decoding="async" draggable={false} className={cls} />;
+    return <img src={book.cover} alt="" decoding="async" draggable={false} className={cls} />;
   }
   if (book.image && !broken) {
     const t = TOPIC[book.topic];

@@ -2,8 +2,7 @@
 
 /**
  * The library's sorting, from the browser: each new text goes to /api/shelve
- * once, in the background, and comes back with a topic, tags and a scene for
- * its cover. Texts shelved before the library existed are sorted the first
+ * once, in the background, and comes back with a topic and tags. Texts shelved before the library existed are sorted the first
  * time the library opens. Moving a book by hand always wins.
  */
 
@@ -40,7 +39,7 @@ export async function shelveText(a: Text): Promise<void> {
     const st = useStore.getState();
     const cur = st.library.find((x) => x.id === a.id);
     if (!cur || cur.topic) return;
-    st.shelve(a.id, { topic: s.topic, tags: s.tags.length ? s.tags : undefined, scene: s.scene });
+    st.shelve(a.id, { topic: s.topic, tags: s.tags.length ? s.tags : undefined });
   } catch {
     // Unsorted is a fine place to wait.
   } finally {

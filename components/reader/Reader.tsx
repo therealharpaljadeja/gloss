@@ -21,7 +21,6 @@ import { Composer, type ComposerHandle } from "./Composer";
 import { ReaderContext, useMedia, useReader, type ReaderApi } from "./context";
 import { GlossCard } from "./GlossCard";
 import { Lens, type OpenHighlight } from "./Lens";
-import { ListenBar } from "./Listen";
 import { SignInNudge } from "@/components/account/SignInNudge";
 import { Margin } from "./Margin";
 import { Notebook } from "./Notebook";
@@ -478,7 +477,7 @@ function ReaderInner({ article }: { article: Article }) {
     <ReaderContext.Provider value={api}>
       <title>{`${article.title}, glossed`}</title>
       <div className={`${focusMode ? "focus-mode" : ""} ${showNumbers ? "" : "hide-nums"} ${notebookOpen ? "nb-open" : ""}`}>
-        <TopBar currentN={current ? ix.numbers.get(current) ?? null : null} pastTitle={pastTitle} listenFrom={askAnchor} />
+        <TopBar currentN={current ? ix.numbers.get(current) ?? null : null} pastTitle={pastTitle} />
 
         <main className="relative z-[1] px-4 pb-10 pt-[calc(var(--topbar-h)+64px)] sm:px-6">
           <div className="reader-grid">
@@ -558,8 +557,8 @@ function ReaderInner({ article }: { article: Article }) {
                 {article.source && <p>From {article.source}.</p>}
                 <p className="mt-1">
                   Glosses are powered by DeepSeek V4.1 Flash, served by{" "}
-                  <a href={BRAND.togetherUrl} target="_blank" rel="noopener noreferrer" className="text-ink-2 underline decoration-rule-strong underline-offset-4 hover:text-ink">
-                    Together AI
+                  <a href={BRAND.providerUrl} target="_blank" rel="noopener noreferrer" className="text-ink-2 underline decoration-rule-strong underline-offset-4 hover:text-ink">
+                    Fortytwo
                   </a>
                   .
                 </p>
@@ -591,7 +590,6 @@ function ReaderInner({ article }: { article: Article }) {
         )}
 
         <Lens rootEl={articleEl} openHighlight={openHl} />
-        <ListenBar />
         <SignInNudge />
         <Notebook />
         <Peek peek={peek} />

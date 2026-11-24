@@ -4,15 +4,15 @@
 </a>
 
 <p align="center">
-  An open source AI reader for articles and PDFs. Select any line, ask a question, and get a cited answer in the margin. Powered by Together.ai.
+  An open source AI reader for articles and PDFs. Select any line, ask a question, and get a cited answer in the margin. Powered by [Fortytwo](https://fortytwo.network).
 </p>
 
 ## Tech stack
 
-- [DeepSeek V4.1 Flash](https://togetherai.link/?utm_source=gloss&utm_medium=referral&utm_campaign=example-app) and Kimi K3 for the LLMs
-- [Together AI](https://togetherai.link/?utm_source=gloss&utm_medium=referral&utm_campaign=example-app) for LLM inference
+- [DeepSeek V4.1 Flash](https://docs.fortytwo.network/docs/models) for the LLM
+- [Fortytwo](https://docs.fortytwo.network) for LLM inference
 - [Exa](https://exa.ai) for web search
-- [LiteParse](https://github.com/run-llama/liteparse) for in-browser PDF parsing, with Qwen on Together for scanned pages
+- [LiteParse](https://github.com/run-llama/liteparse) for in-browser PDF parsing, with Nemotron 3.5 Super VL on Fortytwo for scanned pages
 - [Clerk](https://clerk.com) for optional auth and [Neon](https://neon.tech) for syncing your library
 - Next.js app router with Tailwind
 
@@ -20,7 +20,7 @@
 
 1. Clone the repo: `git clone https://github.com/Nutlope/gloss`
 2. Create a `.env.local` file (use `.env.example` for reference) and add your API keys:
-   - **[Together AI API key](https://togetherai.link/?utm_source=gloss&utm_medium=referral&utm_campaign=example-app)**: `TOGETHER_API_KEY=`
+   - **[Fortytwo API key](https://platform.fortytwo.network)**: `FORTYTWO_API_KEY=`
    - **Database URL** from [Neon](https://neon.tech): `DATABASE_URL=`
    - **Clerk keys** from [Clerk](https://clerk.com): `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=` and `CLERK_SECRET_KEY=`
    - **Exa API key** (optional, for web search): `EXA_API_KEY=`

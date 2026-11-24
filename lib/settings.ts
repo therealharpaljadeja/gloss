@@ -37,8 +37,6 @@ export type Settings = {
   search: boolean;
   numbers: boolean;
   rail: boolean;
-  /** Read aloud. Off by default: when on, a listen button joins the reader's top bar. */
-  listen: boolean;
 };
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -56,7 +54,6 @@ export const DEFAULT_SETTINGS: Settings = {
   search: true,
   numbers: false,
   rail: true,
-  listen: false,
 };
 
 /** Swatch colours for the settings panel. The real palettes live in globals.css. */

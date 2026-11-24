@@ -219,8 +219,8 @@ async function saveArticles(userId: string, args: Record<string, unknown>, via: 
       return { url, status: "already_saved", title: String(k.data.title ?? "") };
     }
 
-    const { topic, tags, scene } = await sortOf(userId, a);
-    const item = shelfItem(a, { topic, tags, scene, via });
+    const { topic, tags } = await sortOf(userId, a);
+    const item = shelfItem(a, { topic, tags, via });
     await shelveForUser(userId, item, a);
     have.set(key, { id: a.id, data: item as unknown as Record<string, unknown>, pct: 0 });
     return { url, status: "saved", title: a.title, topic: TOPIC[topic ?? "unsorted"].name };
@@ -249,13 +249,13 @@ function savesLeft(shelf: ShelfRow[]) {
 }
 
 /** Sort it now, on the reader's own allowance. Out of allowance, it waits in Unsorted and the browser sorts it later. */
-async function sortOf(userId: string, a: Article): Promise<{ topic?: TopicKey; tags?: string[]; scene?: string }> {
+async function sortOf(userId: string, a: Article): Promise<{ topic?: TopicKey; tags?: string[] }> {
   const free = await checkFreeUser(userId);
   if (!free.ok) return {};
   const c = await classify({ title: a.title, author: a.author, source: a.source, dek: a.dek, excerpt: excerptOf(a.blocks) });
   if (!c.ok) return {};
   await chargeFree(free.subject, c.usd);
-  return { topic: c.shelving.topic, scene: c.shelving.scene, tags: c.shelving.tags.length ? c.shelving.tags : undefined };
+  return { topic: c.shelving.topic, tags: c.shelving.tags.length ? c.shelving.tags : undefined };
 }
 
 /* ---------- save_text ---------- */
@@ -307,7 +307,7 @@ async function saveText(userId: string, args: Record<string, unknown>, via: stri
   });
 }
 
-function shelfItem(a: Article, s: { topic?: TopicKey; tags?: string[]; scene?: string; via?: string }): LibraryItem {
+function shelfItem(a: Article, s: { topic?: TopicKey; tags?: string[]; via?: string }): LibraryItem {
   const item: LibraryItem = {
     id: a.id,
     title: a.title,
@@ -322,7 +322,6 @@ function shelfItem(a: Article, s: { topic?: TopicKey; tags?: string[]; scene?: s
     image: a.image,
     topic: s.topic,
     tags: s.tags,
-    scene: s.scene,
     addedBy: "agent",
     // The connection's name, as the reader chose it ("Grok Bot", "Claude"), so the library can say who shelved it.
     addedVia: s.via || undefined,
