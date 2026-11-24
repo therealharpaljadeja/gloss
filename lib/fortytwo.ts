@@ -186,7 +186,9 @@ export async function completeJSON<T>(req: {
         temperature: 0.3,
         max_tokens: req.maxTokens ?? 1400,
         reasoning_effort: req.thinking ? "low" : "none",
-        response_format: { type: "json_object" },
+        // Fortytwo returns an upstream 502 for json_object combined with reasoning; the prompt asks for JSON and the
+        // reply is cut to its outermost braces below, so thinking calls go without it.
+        ...(req.thinking ? {} : { response_format: { type: "json_object" } }),
         messages: req.messages,
       }),
     });
