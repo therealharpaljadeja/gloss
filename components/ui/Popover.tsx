@@ -26,18 +26,19 @@ export function Popover({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const panel = useRef<HTMLDivElement>(null);
   const [shift, setShift] = useState(0);
 
   // Keep the panel on screen when the trigger sits away from the edge it is anchored to (narrow phones).
+  // Measured from the trigger, not the panel: the panel is mid scale-in when this runs.
   useLayoutEffect(() => {
-    if (!open || !panel.current) return;
-    const r = panel.current.getBoundingClientRect();
-    const left = r.left - shift;
-    const right = r.right - shift;
+    if (!open || !ref.current) return;
+    const t = ref.current.getBoundingClientRect();
     const pad = 12;
+    const w = Math.min(width, window.innerWidth - 2 * pad);
+    const left = align === "right" ? t.right - w : t.left;
+    const right = left + w;
     setShift(left < pad ? pad - left : right > window.innerWidth - pad ? window.innerWidth - pad - right : 0);
-  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [open, width, align]);
 
   useEffect(() => {
     if (!openOn) return;
@@ -83,7 +84,6 @@ export function Popover({
       </button>
       {open && (
         <div
-          ref={panel}
           role="dialog"
           aria-label={label}
           className={`pop absolute top-[calc(100%+8px)] z-[60] p-4 ${align === "right" ? "right-0" : "left-0"}`}
