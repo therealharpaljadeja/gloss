@@ -331,7 +331,7 @@ export function Lens({ rootEl, openHighlight }: { rootEl: HTMLElement | null; op
         if (tag !== "INPUT" && tag !== "TEXTAREA") e.preventDefault();
       }}
     >
-      <div className="relative rounded-[14px] bg-lens p-1 text-lens-fg shadow-pop ring-1 ring-black/5">
+      <div className="relative rounded-[12px] bg-lens p-1 text-lens-fg shadow-pop ring-1 ring-black/5">
         {lens.mode === "actions" && existing?.note && (
           <button
             type="button"
@@ -368,7 +368,7 @@ export function Lens({ rootEl, openHighlight }: { rootEl: HTMLElement | null; op
               }}
               placeholder={existing ? "A note on this highlight" : "A note, in your own words"}
               aria-label="Your note on the selected passage"
-              className="block max-h-[168px] min-h-8 w-full resize-none bg-transparent px-3 pt-[7px] font-serif text-[15px] leading-[1.45] text-lens-fg outline-none focus-visible:outline-none placeholder:text-lens-mute"
+              className="block max-h-[168px] min-h-8 w-full resize-none bg-transparent px-3 pt-[7px] font-medium tracking-[-0.02em] text-[15px] leading-[1.45] text-lens-fg outline-none focus-visible:outline-none placeholder:text-lens-mute"
             />
             <div className="flex items-center justify-between gap-3 pb-0.5 pl-3 pr-0.5 pt-1">
               <span className="text-[11.5px] text-lens-mute">
@@ -545,7 +545,7 @@ export function Lens({ rootEl, openHighlight }: { rootEl: HTMLElement | null; op
         )}
 
         {menu && lens.mode === "actions" && (
-          <div role="menu" aria-label="More actions" className={`lens-menu absolute right-0 ${outside} w-[264px] rounded-[14px] bg-lens p-1 text-lens-fg shadow-pop ring-1 ring-black/5`}>
+          <div role="menu" aria-label="More actions" className={`lens-menu absolute right-0 ${outside} w-[264px] rounded-[12px] bg-lens p-1 text-lens-fg shadow-pop ring-1 ring-black/5`}>
             {more.map((a, i) => {
               const Icon = ICONS[a]!;
               return (

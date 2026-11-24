@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { Atkinson_Hyperlegible_Next, Literata, Newsreader, Schibsted_Grotesk } from "next/font/google";
+import { Atkinson_Hyperlegible_Next, Inter, JetBrains_Mono, Literata, Newsreader } from "next/font/google";
 import { BOOT_SCRIPT } from "@/lib/settings";
 import "./globals.css";
 import { Tooltips } from "@/components/ui/Tooltips";
@@ -16,10 +16,17 @@ const serif = Newsreader({
   display: "swap",
 });
 
-const sans = Schibsted_Grotesk({
-  subsets: ["latin"],
+const sans = Inter({
+  subsets: ["latin", "latin-ext"],
   variable: "--nf-sans",
   display: "swap",
+});
+
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--nf-mono",
+  display: "swap",
+  preload: false,
 });
 
 // Optional reading faces: declared here, fetched only when a reader picks them.
@@ -54,8 +61,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f6f3ec" },
-    { media: "(prefers-color-scheme: dark)", color: "#151412" },
+    { media: "(prefers-color-scheme: light)", color: "#fdfdfc" },
+    { media: "(prefers-color-scheme: dark)", color: "#111110" },
   ],
 };
 
@@ -71,13 +78,13 @@ const CLERK_APPEARANCE = {
     colorBorder: "var(--rule-strong)",
     colorNeutral: "var(--ink)",
     fontFamily: "var(--font-sans)",
-    borderRadius: "12px",
+    borderRadius: "8px",
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${serif.variable} ${sans.variable} ${book.variable} ${legible.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${serif.variable} ${sans.variable} ${mono.variable} ${book.variable} ${legible.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: BOOT_SCRIPT }} />
       </head>

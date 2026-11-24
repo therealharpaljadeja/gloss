@@ -8,26 +8,26 @@
 /* Light grounds. Each sets its own neutrals; the pen colour is layered on top. */
 :root,
 [data-theme="paper"] {
-  --bg: #f6f3ec;
-  --bg-raised: #fcfaf6;
-  --bg-sunk: #ede8dd;
-  --ink: #1d1b18;
-  --ink-2: #4b463f;
-  --ink-3: #857e72;
-  --ink-4: #aba394;
-  --rule: #e5dfd2;
-  --rule-strong: #d3cab8;
-  --hl: rgb(242 196 56 / 0.46);
-  --hl-strong: rgb(242 196 56 / 0.7);
-  --lens-bg: #1d1b18;
-  --lens-fg: #f3efe6;
-  --lens-mute: #9a9285;
-  --lens-hover: #34312c;
-  --shadow-pop: 0 1px 1px rgb(40 30 20 / 0.04), 0 14px 36px -14px rgb(40 30 20 / 0.3), 0 3px 8px -3px rgb(40 30 20 / 0.1);
-  --shadow-card: 0 1px 1px rgb(40 30 20 / 0.03), 0 10px 26px -16px rgb(40 30 20 / 0.24);
-  --bg-pill: #fffdf9;
-  --grain-opacity: 0.045;
-  --good: #3f7d4e;
+  --bg: #fdfdfc;
+  --bg-raised: #ffffff;
+  --bg-sunk: #f1f0ef;
+  --ink: #21201c;
+  --ink-2: #63635e;
+  --ink-3: #82827c;
+  --ink-4: #a9a8a2;
+  --rule: #e9e8e6;
+  --rule-strong: #dad9d6;
+  --hl: rgb(250 214 87 / 0.5);
+  --hl-strong: rgb(250 214 87 / 0.75);
+  --lens-bg: #21201c;
+  --lens-fg: #eeeeec;
+  --lens-mute: #9c9b96;
+  --lens-hover: #33322e;
+  --shadow-pop: 0 0 0 1px rgb(0 0 0 / 0.07), 0 1px 1px rgb(0 0 0 / 0.02), 0 4px 8px -4px rgb(0 0 0 / 0.04), 0 16px 24px -8px rgb(0 0 0 / 0.07);
+  --shadow-card: 0 0 0 1px rgb(0 0 0 / 0.07), 0 1px 2px rgb(0 0 0 / 0.04);
+  --bg-pill: #ffffff;
+  --grain-opacity: 0;
+  --good: #2a7e3b;
   --rubric: var(--pen-l);
   --rubric-text: var(--pen-l-text);
   color-scheme: light;
@@ -50,7 +50,7 @@
   --lens-mute: #a8957a;
   --lens-hover: #463a2a;
   --bg-pill: #fbf5e8;
-  --grain-opacity: 0.06;
+  --grain-opacity: 0;
 }
 
 [data-theme="snow"] {
@@ -72,34 +72,34 @@
   --bg-pill: #ffffff;
   --shadow-pop: 0 1px 1px rgb(15 20 30 / 0.04), 0 14px 36px -14px rgb(15 20 30 / 0.22), 0 3px 8px -3px rgb(15 20 30 / 0.08);
   --shadow-card: 0 1px 1px rgb(15 20 30 / 0.03), 0 10px 26px -16px rgb(15 20 30 / 0.18);
-  --grain-opacity: 0.02;
+  --grain-opacity: 0;
 }
 
 /* Dark grounds. */
 [data-theme="night"] {
-  --bg: #151412;
-  --bg-raised: #1d1b18;
-  --bg-sunk: #24221e;
-  --ink: #e9e3d6;
-  --ink-2: #b6ae9e;
-  --ink-3: #878073;
-  --ink-4: #5b564d;
-  --rule: #2c2a26;
-  --rule-strong: #3e3a34;
-  --hl: rgb(240 196 70 / 0.2);
-  --hl-strong: rgb(240 196 70 / 0.34);
+  --bg: #111110;
+  --bg-raised: #191918;
+  --bg-sunk: #222221;
+  --ink: #eeeeec;
+  --ink-2: #b5b3ad;
+  --ink-3: #7c7b74;
+  --ink-4: #56554f;
+  --rule: #2a2a28;
+  --rule-strong: #3b3a37;
+  --hl: rgb(250 214 87 / 0.2);
+  --hl-strong: rgb(250 214 87 / 0.34);
   --hl-a: 24%;
   --hl-a-strong: 38%;
   --key-a: 19%;
-  --lens-bg: #ece6d9;
-  --lens-fg: #191714;
-  --lens-mute: #7d766a;
-  --lens-hover: #d6cfbf;
-  --bg-pill: #34312b;
-  --shadow-pop: 0 1px 1px rgb(0 0 0 / 0.3), 0 18px 44px -14px rgb(0 0 0 / 0.65), 0 3px 8px -3px rgb(0 0 0 / 0.4);
-  --shadow-card: 0 1px 1px rgb(0 0 0 / 0.25), 0 12px 30px -16px rgb(0 0 0 / 0.6);
-  --grain-opacity: 0.035;
-  --good: #79b98a;
+  --lens-bg: #eeeeec;
+  --lens-fg: #111110;
+  --lens-mute: #6f6e69;
+  --lens-hover: #dad9d6;
+  --bg-pill: #2a2a28;
+  --shadow-pop: 0 0 0 1px rgb(255 255 255 / 0.08), 0 4px 8px -4px rgb(0 0 0 / 0.4), 0 16px 24px -8px rgb(0 0 0 / 0.5);
+  --shadow-card: 0 0 0 1px rgb(255 255 255 / 0.07), 0 1px 2px rgb(0 0 0 / 0.3);
+  --grain-opacity: 0;
+  --good: #71d083;
   --rubric: var(--pen-d);
   --rubric-text: var(--pen-d-text);
   color-scheme: dark;
@@ -127,7 +127,7 @@
   --bg-pill: #2c3441;
   --shadow-pop: 0 1px 1px rgb(0 0 0 / 0.35), 0 18px 44px -14px rgb(0 0 0 / 0.7), 0 3px 8px -3px rgb(0 0 0 / 0.45);
   --shadow-card: 0 1px 1px rgb(0 0 0 / 0.3), 0 12px 30px -16px rgb(0 0 0 / 0.65);
-  --grain-opacity: 0.03;
+  --grain-opacity: 0;
   --good: #7fbf95;
   --rubric: var(--pen-d);
   --rubric-text: var(--pen-d-text);
@@ -137,10 +137,10 @@
 /* Pens: the colour the model writes in. One light and one dark tone each. */
 :root,
 [data-pen="vermilion"] {
-  --pen-l: #c1401b;
-  --pen-l-text: #a9361a;
-  --pen-d: #ef7a50;
-  --pen-d-text: #f28b65;
+  --pen-l: #d13415;
+  --pen-l-text: #c22d10;
+  --pen-d: #ff8c6e;
+  --pen-d-text: #ff977d;
 }
 [data-pen="cobalt"] {
   --pen-l: #2c58c9;
@@ -168,11 +168,12 @@
   --rubric-key: color-mix(in oklab, var(--rubric) var(--key-a, 13%), transparent);
   --selection: color-mix(in oklab, var(--rubric) 18%, transparent);
   --font-serif: var(--nf-serif), "Iowan Old Style", Georgia, serif;
-  --font-sans: var(--nf-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--nf-mono), ui-monospace, "SF Mono", Menlo, monospace;
+  --font-sans: var(--nf-sans), "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-book: var(--nf-book), "Iowan Old Style", Georgia, serif;
   --font-legible: var(--nf-legible), ui-sans-serif, system-ui, sans-serif;
   /* highlighter inks; alpha per ground */
-  --mk-yellow: #f2c438;
+  --mk-yellow: #fad657;
   --mk-green: #7cc66f;
   --mk-blue: #6aa8f0;
   --mk-pink: #f084ac;
@@ -208,6 +209,7 @@
   --color-good: var(--good);
   --font-serif: var(--font-serif);
   --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
   --shadow-pop: var(--shadow-pop);
   --shadow-card: var(--shadow-card);
 }
@@ -233,6 +235,7 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-sans);
+  font-feature-settings: "cv01", "ss03";
   font-size: 15px;
   line-height: 1.5;
   min-height: 100dvh;
@@ -255,9 +258,9 @@ body::before {
 }
 
 :focus-visible {
-  outline: 2px solid var(--rubric);
+  outline: 2px solid var(--ink-2);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 button {
@@ -376,11 +379,8 @@ kbd,
   letter-spacing: 0.004em;
 }
 
-[data-face="sans"] .prose-read .blk[data-type="h2"],
-[data-face="sans"] .prose-read .blk[data-type="h3"],
-[data-face="legible"] .prose-read .blk[data-type="h2"],
-[data-face="legible"] .prose-read .blk[data-type="h3"] {
-  font-family: var(--font-serif);
+[data-face="sans"] .prose-read {
+  font-feature-settings: "cv01", "ss03";
 }
 
 /* Justified like a printed page, with hyphens so the spacing stays even. */
@@ -420,17 +420,17 @@ kbd,
 }
 
 .prose-read .blk[data-type="h2"] {
-  font-size: 1.32em;
-  line-height: 1.25;
-  font-weight: 500;
-  letter-spacing: -0.01em;
+  font-size: 1.2em;
+  line-height: 1.3;
+  font-weight: 550;
+  letter-spacing: -0.015em;
   margin: 2em 0 0.7em;
 }
 
 .prose-read .blk[data-type="h3"] {
-  font-size: 1.08em;
-  line-height: 1.3;
-  font-weight: 600;
+  font-size: 1.04em;
+  line-height: 1.35;
+  font-weight: 550;
   margin: 1.6em 0 0.5em;
 }
 
@@ -438,6 +438,7 @@ kbd,
   padding-left: 1.1em;
   border-left: 2px solid var(--rule-strong);
   color: var(--ink-2);
+  font-family: var(--font-serif);
   font-style: italic;
 }
 
@@ -458,8 +459,9 @@ kbd,
 }
 
 .prose-read .blk[data-type="pre"] {
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   font-size: 0.74em;
+  border: 1px solid var(--rule);
   line-height: 1.6;
   white-space: pre-wrap;
   background: var(--bg-sunk);
@@ -482,43 +484,20 @@ kbd,
 }
 
 .prose-read code {
-  font-family: var(--font-sans);
-  font-size: 0.82em;
+  font-family: var(--font-mono);
+  font-size: 0.8em;
   background: var(--bg-sunk);
-  padding: 0.1em 0.3em;
-  border-radius: 4px;
+  border: 1px solid var(--rule);
+  padding: 0.1em 0.35em;
+  border-radius: 6px;
 }
 
 .prose-read a {
   color: inherit;
   text-decoration: underline;
-  text-decoration-color: var(--rule-strong);
+  text-decoration-color: var(--ink-4);
   text-underline-offset: 0.2em;
-  text-decoration-thickness: 1px;
-}
-
-/* A rubricated initial: the coloured capital of a manuscript, two lines deep. */
-.prose-read .blk.is-first .blk-text::first-letter {
-  float: left;
-  font-size: 3.45em;
-  line-height: 0.84;
-  padding: 0.07em 0.05em 0 0;
-  color: var(--rubric);
-  font-family: var(--font-serif);
-  font-weight: 400;
-  font-variation-settings: "opsz" 72;
-}
-
-@supports (initial-letter: 2) or (-webkit-initial-letter: 2) {
-  .prose-read .blk.is-first .blk-text::first-letter {
-    float: none;
-    font-size: inherit;
-    line-height: inherit;
-    padding: 0;
-    -webkit-initial-letter: 2;
-    initial-letter: 2;
-    margin-right: 0.12em;
-  }
+  text-decoration-thickness: 1.5px;
 }
 
 /* ---------- paragraph numbers: the shared address system ---------- */
@@ -1007,7 +986,7 @@ mark.key .cite {
 .pop {
   background: var(--bg-raised);
   border: 1px solid var(--rule);
-  border-radius: 14px;
+  border-radius: 12px;
   box-shadow: var(--shadow-pop);
   animation: pop-in 0.18s var(--ease-out);
   transform-origin: var(--origin, top right);
@@ -1230,11 +1209,10 @@ mark.key .cite {
 
 .hero-title {
   /* By the width, and by the height too, so the whole landing fits one screen on a short laptop. */
-  font-size: clamp(2.9rem, min(7vw, 10.5vh), 6.8rem);
-  line-height: 0.98;
-  font-weight: 350;
-  letter-spacing: -0.038em;
-  font-variation-settings: "opsz" 72;
+  font-size: clamp(2.1rem, min(5vw, 7.5vh), 3.6rem);
+  line-height: 1.08;
+  font-weight: 550;
+  letter-spacing: -0.035em;
   text-wrap: balance;
 }
 
@@ -1370,7 +1348,7 @@ mark.key .cite {
   align-items: center;
   gap: 7px;
   padding: 0 11px 0 4px;
-  border-radius: 999px;
+  border-radius: 8px;
   border: 1px solid var(--rule);
   background: var(--bg-raised);
   color: var(--ink-2);
@@ -1472,7 +1450,7 @@ mark.key .cite {
   height: 124px;
   flex-direction: column;
   padding: 15px 18px 14px;
-  border-radius: 16px;
+  border-radius: 12px;
   border: 1px solid var(--rule);
   background: var(--bg-raised);
   box-shadow: var(--shadow-card);
@@ -1490,7 +1468,7 @@ a.desk-tile:active {
 }
 a.desk-tile:focus-visible {
   outline-offset: 3px;
-  border-radius: 16px;
+  border-radius: 12px;
 }
 
 /* The source under a quote: it darkens and grows an arrow when reached for. */
@@ -1524,7 +1502,7 @@ a.desk-tile:focus-visible {
   background: color-mix(in oklab, var(--bg-raised) 55%, transparent);
 }
 .desk-step-n {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1;
   color: var(--rubric-text);
@@ -1607,7 +1585,7 @@ a.desk-tile:focus-visible {
   inset-inline: 0;
   bottom: 0;
   height: min(86dvh, 820px);
-  border-radius: 22px 22px 0 0;
+  border-radius: 12px 22px 0 0;
   border-top: 1px solid var(--rule);
   background: var(--bg-raised);
   box-shadow: 0 -24px 60px -24px rgb(0 0 0 / 0.28);

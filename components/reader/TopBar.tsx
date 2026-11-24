@@ -93,7 +93,7 @@ export function TopBar({ currentN, pastTitle }: { currentN: number | null; pastT
             <button
               type="button"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="min-w-0 truncate rounded-full px-2.5 py-1.5 font-serif text-[16px] leading-none text-ink transition-colors hover:bg-sunk"
+              className="min-w-0 truncate rounded-lg px-2.5 py-1.5 font-medium tracking-[-0.02em] text-[16px] leading-none text-ink transition-colors hover:bg-sunk"
               data-tip="Back to the top"
             >
               {ix.article.title}
@@ -105,7 +105,7 @@ export function TopBar({ currentN, pastTitle }: { currentN: number | null; pastT
                   type="button"
                   onClick={() => jumpTo(section.start, { flash: false })}
                   data-tip="Go to the start of this part"
-                  className="min-w-0 truncate rounded-full px-2 py-1.5 leading-none text-ink-3 hover:bg-sunk hover:text-ink"
+                  className="min-w-0 truncate rounded-lg px-2 py-1.5 leading-none text-ink-3 hover:bg-sunk hover:text-ink"
                 >
                   {section.title}
                 </button>
@@ -134,7 +134,7 @@ export function TopBar({ currentN, pastTitle }: { currentN: number | null; pastT
             <NotebookPen size={16} strokeWidth={1.8} />
             <span className="hidden sm:inline">Notebook</span>
             {count > 0 && (
-              <span className="min-w-[18px] rounded-full bg-[var(--rubric)] px-1.5 text-center text-[11px] font-semibold leading-[18px] tabular-nums text-white">{count}</span>
+              <span className="min-w-[18px] rounded-lg bg-[var(--rubric)] px-1.5 text-center text-[11px] font-semibold leading-[18px] tabular-nums text-white">{count}</span>
             )}
           </button>
           <Account />

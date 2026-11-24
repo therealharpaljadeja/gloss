@@ -50,13 +50,13 @@ function KeyButton() {
       <button
         type="button"
         onClick={openKeyMenu}
-        className="inline-flex h-8 items-center rounded-full bg-ink px-3.5 text-[12.5px] font-medium text-bg transition-transform active:scale-[0.97]"
+        className="inline-flex h-8 items-center rounded-lg bg-ink px-3.5 text-[12.5px] font-medium text-bg transition-transform active:scale-[0.97]"
       >
         Add your Fortytwo key
       </button>
       <Show when="signed-out">
         <SignInButton mode="modal">
-          <button type="button" className="inline-flex h-8 items-center rounded-full border border-rule px-3.5 text-[12.5px] font-medium text-ink-2 transition-colors hover:border-rule-strong hover:text-ink">
+          <button type="button" className="inline-flex h-8 items-center rounded-lg border border-rule px-3.5 text-[12.5px] font-medium text-ink-2 transition-colors hover:border-rule-strong hover:text-ink">
             Sign in
           </button>
         </SignInButton>

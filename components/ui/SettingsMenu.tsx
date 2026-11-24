@@ -66,12 +66,12 @@ function Swatch({ theme, on }: { theme: (typeof THEMES)[number]; on: boolean }) 
     >
       {theme.key === "auto" ? (
         <>
-          <span className="flex flex-1 items-center justify-end" style={{ background: "#f6f3ec", color: "#1d1b18" }}>
+          <span className="flex flex-1 items-center justify-end" style={{ background: "#fdfdfc", color: "#21201c" }}>
             <span className={`${face} relative`}>
               A<span className="absolute -bottom-[5px] left-0 right-0 h-[2px] rounded-full" style={{ background: pen(false) }} />
             </span>
           </span>
-          <span className="flex flex-1 items-center justify-start" style={{ background: "#151412", color: "#e9e3d6" }}>
+          <span className="flex flex-1 items-center justify-start" style={{ background: "#111110", color: "#eeeeec" }}>
             <span className={`${face} relative`}>
               a<span className="absolute -bottom-[5px] left-0 right-0 h-[2px] rounded-full" style={{ background: pen(true) }} />
             </span>

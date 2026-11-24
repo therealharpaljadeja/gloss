@@ -28,10 +28,10 @@ export function Brief() {
       <button
         type="button"
         onClick={() => fetchBrief(ix)}
-        className="group mt-6 flex w-full items-center gap-5 rounded-[16px] border border-rule bg-raised/60 py-4 pl-5 pr-4 text-left transition-[border-color,background-color,transform,box-shadow] duration-200 hover:border-rule-strong hover:bg-raised hover:shadow-card active:scale-[0.995]"
+        className="group mt-6 flex w-full items-center gap-5 rounded-[12px] border border-rule bg-raised/60 py-4 pl-5 pr-4 text-left transition-[border-color,background-color,transform,box-shadow] duration-200 hover:border-rule-strong hover:bg-raised hover:shadow-card active:scale-[0.995]"
       >
         <span className="min-w-0 flex-1">
-          <span className="flex items-center gap-1.5 font-serif text-[19px] leading-none tracking-[-0.01em] text-ink [font-variation-settings:'opsz'_24]">
+          <span className="flex items-center gap-1.5 font-medium tracking-[-0.02em] text-[19px] leading-none text-ink">
             Gloss this text
             <ArrowRight size={15} strokeWidth={2} className="translate-y-px text-ink-4 transition-[transform,color] duration-300 ease-[var(--ease-out)] group-hover:translate-x-1 group-hover:text-rubric-text" aria-hidden />
           </span>
@@ -46,7 +46,7 @@ export function Brief() {
 
   if (brief.status === "error") {
     return (
-      <div className="mt-6 flex flex-wrap items-center gap-3 rounded-[16px] border border-rule px-4 py-3.5 text-[13.5px]">
+      <div className="mt-6 flex flex-wrap items-center gap-3 rounded-[12px] border border-rule px-4 py-3.5 text-[13.5px]">
         <p className="text-rubric-text">{brief.error}</p>
         {brief.needKey && (
           <>
@@ -72,7 +72,7 @@ export function Brief() {
   const { data, usage, modelKey } = brief;
   const caveats = data.caveats ?? [];
   return (
-    <section aria-label="Gloss" className="mt-6 rounded-[16px] border border-rule bg-raised/60 px-5">
+    <section aria-label="Gloss" className="mt-6 rounded-[12px] border border-rule bg-raised/60 px-5">
       <button
         type="button"
         onClick={() => setUI({ briefOpen: !open })}
@@ -98,7 +98,7 @@ export function Brief() {
               <ol className="space-y-2.5">
                 {data.claims.map((c, i) => (
                   <li key={i} className="rise grid grid-cols-[1.4rem_minmax(0,1fr)] text-[14.5px] leading-[1.5] text-ink" style={{ animationDuration: "0.5s", animationDelay: `${120 + i * 60}ms` }}>
-                    <span className="font-serif text-[14px] leading-[1.55] tabular-nums text-ink-4">{i + 1}</span>
+                    <span className="font-medium tracking-[-0.02em] text-[14px] leading-[1.55] tabular-nums text-ink-4">{i + 1}</span>
                     <span className="gloss-body !text-[14.5px]">
                       <Answer text={c.cite ? `${c.text} [¶${c.cite}]` : c.text} />
                     </span>
@@ -138,7 +138,7 @@ export function Brief() {
                         onClick={() => jumpTo(s.start)}
                         className="group flex w-full items-baseline gap-3 border-b border-rule py-2 text-left text-[14px] text-ink transition-colors hover:text-rubric-text"
                       >
-                        <span className="w-4 shrink-0 font-serif text-[14px] tabular-nums text-ink-4">{i + 1}</span>
+                        <span className="w-4 shrink-0 font-medium tracking-[-0.02em] text-[14px] tabular-nums text-ink-4">{i + 1}</span>
                         <span className="min-w-0 flex-1 truncate">{s.title}</span>
                         <span className="shrink-0 text-[12px] tabular-nums text-ink-4 group-hover:text-rubric-text">
                           ¶{s.start}
@@ -206,7 +206,7 @@ function BriefLoading({ ix }: { ix: DocIndex }) {
     return () => clearInterval(t);
   }, [steps.length]);
   return (
-    <section aria-busy aria-live="polite" className="mt-6 rounded-[16px] border border-rule bg-raised/60 px-5 py-5">
+    <section aria-busy aria-live="polite" className="mt-6 rounded-[12px] border border-rule bg-raised/60 px-5 py-5">
       <div className="mb-5 flex items-center gap-3">
         <p key={step} className="text-[12.5px] font-medium text-rubric-text" style={{ animation: "rise 0.4s var(--ease-out) both" }}>
           {steps[step]}

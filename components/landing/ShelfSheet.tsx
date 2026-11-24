@@ -162,7 +162,7 @@ export function ShelfSheet({
         <div className="mx-auto flex h-full w-full max-w-[1040px] flex-col px-5 sm:px-10">
           <header className="flex flex-wrap items-center gap-x-6 gap-y-4 pb-5 pt-7">
             <div className="min-w-0 flex-1">
-              <h2 className="flex items-baseline gap-3 font-serif text-[30px] leading-none tracking-[-0.015em] text-ink">
+              <h2 className="flex items-baseline gap-3 font-medium tracking-[-0.02em] text-[30px] leading-none text-ink">
                 Your shelf
                 <Link href="/library" className="font-sans text-[13px] tracking-normal text-ink-3 underline decoration-rule-strong underline-offset-4 transition-colors hover:text-ink">
                   Open the library
@@ -174,7 +174,7 @@ export function ShelfSheet({
                   : `${items.length} texts${counts.reading ? ` · ${counts.reading} in progress` : ""}`}
               </p>
             </div>
-            <label className="flex h-10 w-full items-center gap-2 rounded-full border border-rule bg-bg px-3.5 transition-colors focus-within:border-rule-strong sm:w-[300px]">
+            <label className="flex h-10 w-full items-center gap-2 rounded-lg border border-rule bg-bg px-3.5 transition-colors focus-within:border-rule-strong sm:w-[300px]">
               <Search size={15} className="shrink-0 text-ink-4" aria-hidden />
               <input
                 ref={inputRef}
@@ -193,7 +193,7 @@ export function ShelfSheet({
                   data-tip={exported !== null ? `Exported ${exported} text${exported === 1 ? "" : "s"}` : "Export all notes"}
                   data-tip-hint={exported !== null ? undefined : "Markdown files, ready for Obsidian"}
                   onClick={async () => setExported(await exportAll())}
-                  className="grid size-9 place-items-center rounded-full text-ink-3 transition-colors hover:bg-sunk hover:text-ink"
+                  className="grid size-9 place-items-center rounded-lg text-ink-3 transition-colors hover:bg-sunk hover:text-ink"
                 >
                   {exported !== null ? <Check size={16} className="text-good" /> : <Download size={16} />}
                 </button>
@@ -204,7 +204,7 @@ export function ShelfSheet({
                 data-tip="Close"
                 data-tip-kbd="Esc"
                 onClick={() => onOpenChange(false)}
-                className="grid size-9 place-items-center rounded-full text-ink-3 transition-colors hover:bg-sunk hover:text-ink"
+                className="grid size-9 place-items-center rounded-lg text-ink-3 transition-colors hover:bg-sunk hover:text-ink"
               >
                 <X size={17} />
               </button>
@@ -300,9 +300,9 @@ export function ShelfSheet({
                     <Ring pct={it.pct} />
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="line-clamp-2 font-serif text-[18px] leading-[1.2] tracking-[-0.01em] text-ink">{tidyTitle(it.title)}</span>
+                    <span className="line-clamp-2 font-medium tracking-[-0.02em] text-[18px] leading-[1.2] text-ink">{tidyTitle(it.title)}</span>
                     <span className="mt-1 flex flex-wrap items-center gap-x-1.5 text-[12.5px] text-ink-3">
-                      {it.sample && <span className="rounded-full border border-dashed border-rule-strong px-1.5 text-[11.5px] leading-[17px] text-ink-3">Sample</span>}
+                      {it.sample && <span className="rounded-lg border border-dashed border-rule-strong px-1.5 text-[11.5px] leading-[17px] text-ink-3">Sample</span>}
                       <span className="max-w-[60%] truncate">{it.byline}</span>
                       <span aria-hidden className="text-ink-4">{"·"}</span>
                       <span className="tabular-nums">{it.pct > 0 && it.pct < 1 ? `${Math.round(it.pct * 100)}% read` : `${readingMinutes(it.words)} min`}</span>
@@ -323,7 +323,7 @@ export function ShelfSheet({
                     aria-label={`Rename ${it.title}`}
                     data-tip="Rename"
                     onClick={() => setRenaming(it.id)}
-                    className="absolute right-10 top-3 grid size-7 place-items-center rounded-full text-ink-4 opacity-0 transition-[opacity,background-color] hover:bg-bg hover:text-ink focus-visible:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100"
+                    className="absolute right-10 top-3 grid size-7 place-items-center rounded-lg text-ink-4 opacity-0 transition-[opacity,background-color] hover:bg-bg hover:text-ink focus-visible:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100"
                   >
                     <PencilLine size={14} />
                   </button>
@@ -333,7 +333,7 @@ export function ShelfSheet({
                   aria-label={it.sample ? `Remove the sample ${it.title}` : `Remove ${it.title} from your shelf`}
                   data-tip={it.sample ? "Remove this sample" : "Remove from shelf"}
                   onClick={() => onRemove(it)}
-                  className="absolute right-2 top-3 grid size-7 place-items-center rounded-full text-ink-4 opacity-0 transition-[opacity,background-color] hover:bg-bg hover:text-ink focus-visible:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100"
+                  className="absolute right-2 top-3 grid size-7 place-items-center rounded-lg text-ink-4 opacity-0 transition-[opacity,background-color] hover:bg-bg hover:text-ink focus-visible:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100"
                 >
                   <X size={14} />
                 </button>
@@ -388,7 +388,7 @@ function RenameRow({ title, onDone }: { title: string; onDone: (title: string | 
           }
         }}
         onBlur={(e) => finish(e.currentTarget.value)}
-        className="min-w-0 flex-1 border-b-[1.5px] border-[var(--rubric)] bg-transparent pb-0.5 font-serif text-[18px] leading-[1.2] tracking-[-0.01em] text-ink outline-none focus-visible:outline-none"
+        className="min-w-0 flex-1 border-b-[1.5px] border-[var(--rubric)] bg-transparent pb-0.5 font-medium tracking-[-0.02em] text-[18px] leading-[1.2] text-ink outline-none focus-visible:outline-none"
       />
     </div>
   );

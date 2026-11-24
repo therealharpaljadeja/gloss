@@ -29,7 +29,7 @@ export const ImportBar = forwardRef<HTMLInputElement, Props>(function ImportBar(
           e.preventDefault();
           onSubmit(url);
         }}
-        className={`import-bar relative flex items-center gap-2 overflow-hidden rounded-[18px] border bg-raised p-1.5 pl-[18px] shadow-card transition-[border-color,box-shadow] duration-300 focus-within:border-rule-strong focus-within:shadow-pop ${
+        className={`import-bar relative flex items-center gap-2 overflow-hidden rounded-[12px] border bg-raised p-1.5 pl-[18px] shadow-card transition-[border-color,box-shadow] duration-300 focus-within:border-rule-strong focus-within:shadow-pop ${
           busy ? "border-rule-strong" : "border-rule"
         }`}
       >

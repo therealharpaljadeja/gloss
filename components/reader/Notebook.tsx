@@ -65,13 +65,13 @@ export function Notebook() {
   return (
     <aside
       aria-label="Notebook"
-      className="fixed bottom-2.5 left-2.5 right-2.5 top-[calc(var(--topbar-h)+6px)] z-[45] flex flex-col overflow-hidden rounded-[18px] border border-rule bg-raised shadow-pop sm:left-auto sm:w-[420px]"
+      className="fixed bottom-2.5 left-2.5 right-2.5 top-[calc(var(--topbar-h)+6px)] z-[45] flex flex-col overflow-hidden rounded-[12px] border border-rule bg-raised shadow-pop sm:left-auto sm:w-[420px]"
       style={{ animation: "sheet-in 0.38s var(--ease-out)" }}
     >
       <header className={`shrink-0 border-b px-5 pb-3.5 pt-4 transition-colors duration-200 ${scrolled ? "border-rule" : "border-transparent"}`}>
         <div className="flex items-center gap-1">
           <div className="min-w-0 flex-1">
-            <h2 className="font-serif text-[23px] font-[420] leading-none tracking-[-0.015em] text-ink [font-variation-settings:'opsz'_36]">Notebook</h2>
+            <h2 className="font-medium tracking-[-0.02em] text-[23px] leading-none text-ink">Notebook</h2>
             <p className="mt-1.5 text-[12.5px] leading-none text-ink-3">{summary || "Empty for now"}</p>
           </div>
           <HeadBtn
@@ -137,7 +137,7 @@ export function Notebook() {
       {!entries.length ? (
         <div className="flex flex-1 flex-col items-center justify-center px-10 pb-16 text-center">
           <GlossMark className="size-11 text-ink-4" />
-          <p className="mt-5 font-serif text-[20px] leading-tight text-ink">Nothing here yet</p>
+          <p className="mt-5 font-medium tracking-[-0.02em] text-[20px] leading-tight text-ink">Nothing here yet</p>
           <p className="mt-2 max-w-[270px] text-[13.5px] leading-relaxed text-ink-3">
             Select a line and type a question, or highlight it. Every question and answer lands here, in reading order.
           </p>
@@ -176,7 +176,7 @@ function HeadBtn({ label, onClick, disabled, children }: { label: string; onClic
       data-tip={label}
       disabled={disabled}
       onClick={onClick}
-      className="grid size-9 place-items-center rounded-full text-ink-3 transition-colors hover:bg-sunk hover:text-ink disabled:pointer-events-none disabled:opacity-35"
+      className="grid size-9 place-items-center rounded-lg text-ink-3 transition-colors hover:bg-sunk hover:text-ink disabled:pointer-events-none disabled:opacity-35"
     >
       {children}
     </button>
@@ -214,7 +214,7 @@ function GlossEntry({ g }: { g: Gloss }) {
   };
 
   return (
-    <article className="group relative rounded-[14px] border border-rule bg-bg px-4 pb-4 pt-3.5 transition-colors hover:border-rule-strong">
+    <article className="group relative rounded-[12px] border border-rule bg-bg px-4 pb-4 pt-3.5 transition-colors hover:border-rule-strong">
       <button type="button" onClick={go} className="block w-full pr-7 text-left">
         <Meta n={n} label={label} at={g.createdAt} />
         {g.anchor && (
@@ -229,7 +229,7 @@ function GlossEntry({ g }: { g: Gloss }) {
           <div key={i} className={i > 0 ? "border-t border-rule pt-3.5" : ""}>
             <div className="grid grid-cols-[16px_minmax(0,1fr)] items-baseline gap-x-2">
               <span aria-hidden className="text-[11.5px] font-semibold leading-none text-rubric-text">Q</span>
-              <p className="font-serif text-[16.5px] leading-[1.35] text-ink [font-variation-settings:'opsz'_24]">{p.q}</p>
+              <p className="font-medium tracking-[-0.02em] text-[16.5px] leading-[1.35] text-ink">{p.q}</p>
             </div>
             <div className="mt-2 grid grid-cols-[16px_minmax(0,1fr)] items-baseline gap-x-2">
               <span aria-hidden className="text-[11.5px] font-semibold leading-none text-ink-4">A</span>
@@ -249,7 +249,7 @@ function GlossEntry({ g }: { g: Gloss }) {
           stopGloss(g.id);
           removeGloss(g.articleId, g.id);
         }}
-        className="absolute right-2.5 top-2.5 grid size-7 place-items-center rounded-full text-ink-4 opacity-0 transition-opacity hover:bg-sunk hover:text-ink focus-visible:opacity-100 group-hover:opacity-100"
+        className="absolute right-2.5 top-2.5 grid size-7 place-items-center rounded-lg text-ink-4 opacity-0 transition-opacity hover:bg-sunk hover:text-ink focus-visible:opacity-100 group-hover:opacity-100"
       >
         <Trash2 size={13} />
       </button>
@@ -298,7 +298,7 @@ function HighlightEntry({ h }: { h: Highlight }) {
   const removeHighlight = useStore((s) => s.removeHighlight);
   const setUI = useStore((s) => s.setUI);
   return (
-    <article className="group relative rounded-[14px] border border-rule bg-bg px-4 pb-3.5 pt-3.5 transition-colors hover:border-rule-strong">
+    <article className="group relative rounded-[12px] border border-rule bg-bg px-4 pb-3.5 pt-3.5 transition-colors hover:border-rule-strong">
       <button
         type="button"
         onClick={() => {
@@ -320,7 +320,7 @@ function HighlightEntry({ h }: { h: Highlight }) {
         aria-label="Remove highlight"
         data-tip="Remove"
         onClick={() => removeHighlight(ix.article.id, h.id)}
-        className="absolute right-2.5 top-2.5 grid size-7 place-items-center rounded-full text-ink-4 opacity-0 transition-opacity hover:bg-sunk hover:text-ink focus-visible:opacity-100 group-hover:opacity-100"
+        className="absolute right-2.5 top-2.5 grid size-7 place-items-center rounded-lg text-ink-4 opacity-0 transition-opacity hover:bg-sunk hover:text-ink focus-visible:opacity-100 group-hover:opacity-100"
       >
         <X size={14} />
       </button>

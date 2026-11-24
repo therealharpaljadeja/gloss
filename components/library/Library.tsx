@@ -246,7 +246,7 @@ export function Library() {
       <Search size={15} className="shrink-0 text-ink-4" aria-hidden />
       <input ref={searchRef} value={q} onChange={(e) => setQ(e.target.value)} placeholder={T ? `Search ${T.name}` : "Search the library"} aria-label="Search the library" />
       {q ? (
-        <button type="button" aria-label="Clear search" onClick={() => setQ("")} className="grid size-5 place-items-center rounded-full text-ink-3 hover:bg-sunk">
+        <button type="button" aria-label="Clear search" onClick={() => setQ("")} className="grid size-5 place-items-center rounded-lg text-ink-3 hover:bg-sunk">
           <X size={13} />
         </button>
       ) : (
