@@ -1341,25 +1341,20 @@ mark.key .cite {
   background: color-mix(in oklab, var(--bg-sunk) 80%, var(--ink) 8%);
 }
 
-/* A bundled sample under the link bar: a small plate of its cover, and its author. */
+/* A suggested link under the link bar. */
 .lib-sample {
   display: inline-flex;
   height: 30px;
   align-items: center;
+  flex-shrink: 0;
   gap: 7px;
-  padding: 0 11px 0 4px;
+  padding: 0 11px;
+  white-space: nowrap;
   border-radius: 8px;
   border: 1px solid var(--rule);
   background: var(--bg-raised);
   color: var(--ink-2);
   transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s var(--ease-out);
-}
-.lib-sample img {
-  width: 22px;
-  height: 22px;
-  border-radius: 999px;
-  object-fit: cover;
-  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.08);
 }
 .lib-sample:hover {
   color: var(--ink);
@@ -1367,6 +1362,12 @@ mark.key .cite {
 }
 .lib-sample:active {
   transform: scale(0.97);
+}
+.lib-line:has(.lib-sample) {
+  max-width: 760px;
+}
+.lib-line:has(.lib-sample) > span:first-child {
+  white-space: nowrap;
 }
 @media (max-width: 639px) {
   /* On a phone the question sits on its own line, and the samples under it. */
