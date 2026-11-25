@@ -4,11 +4,8 @@ import { useRouter } from "next/navigation";
 import { startTransition, useCallback, useEffect, useMemo, useRef, useState, ViewTransition } from "react";
 import { ChevronLeft, ChevronRight, LayoutGrid, Library as LibraryIcon, Search, X } from "lucide-react";
 import { TopBar } from "@/components/ui/TopBar";
-import { readingMinutes, tidyTitle, wordCount } from "@/lib/article";
-import { SAMPLE_SHELF } from "@/lib/classics";
+import { readingMinutes, tidyTitle } from "@/lib/article";
 import { SORTS, sortBooks, TAGS, TOPIC, TOPICS, topicOf, type Book, type Sort, type TagKey, type Topic, type TopicKey } from "@/lib/library";
-import { hideSample, useLibraryPrefs } from "@/lib/library-prefs";
-import { SAMPLES } from "@/lib/samples";
 import { applySettings } from "@/lib/settings";
 import { backfill } from "@/lib/shelving";
 import { useStore } from "@/lib/store";
@@ -23,8 +20,8 @@ import { TopicGrid, TopicPage } from "./Topics";
 type View = "shelf" | "topics";
 
 const SEEN_KEY = "gloss:library-seen";
-/** Samples stay on the shelf until it has this many texts of your own, or for good once opened, unless taken off. */
-const SAMPLES_UNTIL = 6;
+/** The starter cards stay under the shelf until it holds this many texts. */
+const STARTER_UNTIL = 6;
 
 /**
  * Your library: everything on your shelf, sorted onto topics. The bookcase
@@ -42,7 +39,6 @@ export function Library() {
   const highlights = useStore((s) => s.highlights);
   const shelveItem = useStore((s) => s.shelve);
   const removeFromLibrary = useStore((s) => s.removeFromLibrary);
-  const prefs = useLibraryPrefs();
 
   const [view, setView] = useState<View>("shelf");
   const [topic, setTopic] = useState<TopicKey | null>(null);
@@ -143,29 +139,9 @@ export function Library() {
       image: x.image,
       cover: x.cover,
       agent: x.addedBy === "agent",
-      sample: false,
     }));
-    const samples: Book[] = SAMPLES.filter((a) => !prefs.hiddenSamples.includes(a.id) && (own.length < SAMPLES_UNTIL || read(a.id) > 0)).map((a) => ({
-      id: a.id,
-      title: a.title,
-      author: a.author ?? "",
-      year: Number(a.published?.match(/\d{4}/)?.[0]) || undefined,
-      topic: SAMPLE_SHELF[a.id]?.topic ?? "unsorted",
-      minutes: readingMinutes(wordCount(a)),
-      dek: a.dek,
-      tags: [],
-      favorite: false,
-      pct: read(a.id),
-      highlights: marks(a.id),
-      added: 0,
-      cover: SAMPLE_SHELF[a.id]?.cover,
-      agent: false,
-      sample: true,
-    }));
-    return [...mine, ...samples];
-    // `own.length` is derived from `library`.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [library, progress, highlights, hydrated, prefs.hiddenSamples]);
+    return mine;
+  }, [library, progress, highlights, hydrated]);
 
   const sorted = useMemo(() => sortBooks(books, sort), [books, sort]);
 
@@ -374,7 +350,7 @@ export function Library() {
                 {hydrated && shown.size === 0 && books.length > 0 && (
                   <p className="py-6 text-center text-[14px] text-ink-3">Nothing on the shelves matches{q ? <> &ldquo;{q}&rdquo;</> : ""}.</p>
                 )}
-                {hydrated && own.length < SAMPLES_UNTIL ? (
+                {hydrated && own.length < STARTER_UNTIL ? (
                   <Starter count={own.length} onAdd={setAdding} />
                 ) : (
                   hydrated && <p className="lib-hint">Click a spine to take it down. Arrow keys walk the shelf.</p>
@@ -397,7 +373,6 @@ export function Library() {
           onShelve={(b, patch) => shelveItem(b.id, patch)}
           onRemove={(b) => {
             setOpen(null);
-            if (b.sample) return hideSample(b.id);
             removeFromLibrary(b.id);
           }}
           onClose={() => {

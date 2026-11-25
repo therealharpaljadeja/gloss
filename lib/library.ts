@@ -102,8 +102,6 @@ export type Book = {
   cover?: string;
   /** Saved by an agent rather than by hand. */
   agent: boolean;
-  /** A bundled sample: always there, cannot be removed. */
-  sample: boolean;
 };
 
 /* ---------- looks ---------- */

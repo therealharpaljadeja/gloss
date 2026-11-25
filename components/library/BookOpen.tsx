@@ -222,16 +222,14 @@ export function BookOpen({
                     >
                       <Star size={15} fill={book.favorite ? "currentColor" : "none"} />
                     </button>
-                    {!book.sample && (
-                      <button type="button" className="ob-icon" aria-label="Rename" data-tip="Rename" onClick={() => setRenaming(true)}>
-                        <PencilLine size={14} />
-                      </button>
-                    )}
+                    <button type="button" className="ob-icon" aria-label="Rename" data-tip="Rename" onClick={() => setRenaming(true)}>
+                      <PencilLine size={14} />
+                    </button>
                     <button
                       type="button"
                       className="ob-icon"
-                      aria-label={book.sample ? "Remove this sample" : "Remove from the library"}
-                      data-tip={book.sample ? "Remove this sample" : "Remove from the library"}
+                      aria-label="Remove from the library"
+                      data-tip="Remove from the library"
                       onClick={() => onRemove(book)}
                     >
                       <Trash2 size={14} />
@@ -246,8 +244,6 @@ export function BookOpen({
                       if (title && title !== book.title) onShelve(book, { title });
                     }}
                   />
-                ) : book.sample ? (
-                  <h2 className="ob-title">{book.title}</h2>
                 ) : (
                   <h2 className="ob-title">
                     <button type="button" className="ob-title-btn" data-tip="Rename" onClick={() => setRenaming(true)}>
@@ -263,7 +259,7 @@ export function BookOpen({
                   </span>
                 </p>
                 {book.dek && <p className="ob-dek">{book.dek}</p>}
-                {(tagsOf(book).length > 0 || book.tags.length > 0 || book.agent || book.sample) && (
+                {(tagsOf(book).length > 0 || book.tags.length > 0 || book.agent) && (
                   <p className="ob-tags">
                     {tagsOf(book).map((x) => (
                       <span key={x.key}>
@@ -275,7 +271,6 @@ export function BookOpen({
                         <Glyph k="agent" size={15} /> Shelved by your agent
                       </span>
                     )}
-                    {book.sample && <span className="is-word">a sample from Gloss</span>}
                     {book.tags.map((x) => (
                       <span key={x} className="is-word">
                         {x}

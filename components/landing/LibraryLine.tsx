@@ -4,8 +4,6 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { ArrowRight, Check } from "lucide-react";
 import { tidyTitle } from "@/lib/article";
-import { useLibraryPrefs } from "@/lib/library-prefs";
-import { SAMPLES } from "@/lib/samples";
 import { SUGGESTED_LINKS } from "@/lib/suggested";
 import { useStore } from "@/lib/store";
 
@@ -32,16 +30,14 @@ export function LibraryLine({ saved, onSuggest }: { saved: Saved | null; onSugge
   const hydrated = useStore((s) => s.hydrated);
   const library = useStore((s) => s.library);
   const progress = useStore((s) => s.progress);
-  const { hiddenSamples } = useLibraryPrefs();
 
   const reading = useMemo(() => {
-    const samples = SAMPLES.filter((a) => !hiddenSamples.includes(a.id));
-    const titles = new Map<string, string>([...samples.map((a) => [a.id, a.title] as const), ...library.map((x) => [x.id, x.title] as const)]);
+    const titles = new Map<string, string>(library.map((x) => [x.id, x.title] as const));
     const cur = Object.entries(progress)
       .filter(([id, p]) => titles.has(id) && p.pct > 0 && p.pct < 1)
       .sort((a, b) => b[1].at - a[1].at)[0];
     return cur ? { id: cur[0], title: tidyTitle(titles.get(cur[0])!), pct: cur[1].pct } : null;
-  }, [library, progress, hiddenSamples]);
+  }, [library, progress]);
 
   if (!hydrated) return <div className="lib-line" aria-hidden />;
 

@@ -3,11 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TopBar } from "@/components/ui/TopBar";
-import { wordCount, type Article } from "@/lib/article";
+import type { Article } from "@/lib/article";
 import { importFromFile, importFromText, importFromUrl, keep, looksLikeUrl } from "@/lib/import";
-import { hideSample, useLibraryPrefs } from "@/lib/library-prefs";
 import { normalizeUrl } from "@/lib/links";
-import { SAMPLES } from "@/lib/samples";
 import { applySettings } from "@/lib/settings";
 import { useStore } from "@/lib/store";
 import { Hero } from "./Hero";
@@ -27,7 +25,6 @@ export function Landing() {
   const glosses = useStore((s) => s.glosses);
   const removeFromLibrary = useStore((s) => s.removeFromLibrary);
   const shelve = useStore((s) => s.shelve);
-  const { hiddenSamples } = useLibraryPrefs();
 
   const [url, setUrl] = useState("");
   const [busy, setBusy] = useState<Busy>(null);
@@ -209,24 +206,12 @@ export function Landing() {
       words: x.words,
       pct: p(x.id),
       glosses: g(x.id),
-      sample: false,
       touched: (hydrated ? progress[x.id]?.at : 0) || x.addedAt,
-    }));
-    const samples = SAMPLES.filter((a) => !hiddenSamples.includes(a.id)).map((a) => ({
-      id: a.id,
-      title: a.title,
-      byline: [a.author?.split(" ").slice(-1)[0], a.published].filter(Boolean).join(", "),
-      dek: a.dek,
-      words: wordCount(a),
-      pct: p(a.id),
-      glosses: g(a.id),
-      sample: true,
-      touched: hydrated ? progress[a.id]?.at ?? 0 : 0,
     }));
     // What you are in the middle of comes first, then whatever was touched last.
     const reading = (x: ShelfItem) => Number(x.pct > 0 && x.pct < 1);
-    return [...mine, ...samples].sort((a, b) => reading(b) - reading(a) || b.touched - a.touched);
-  }, [library, progress, glosses, hydrated, hiddenSamples]);
+    return mine.sort((a, b) => reading(b) - reading(a) || b.touched - a.touched);
+  }, [library, progress, glosses, hydrated]);
 
   return (
     <div className={`landing relative z-[1] flex min-h-dvh flex-col transition-[opacity,filter,transform] duration-300 ease-[var(--ease-out)] ${leaving ? "scale-[0.995] opacity-0 blur-[2px]" : ""}`}>
@@ -265,7 +250,7 @@ export function Landing() {
         items={items}
         onOpen={go}
         onRename={(id, title) => shelve(id, { title })}
-        onRemove={(it) => (it.sample ? hideSample(it.id) : removeFromLibrary(it.id))}
+        onRemove={(it) => removeFromLibrary(it.id)}
       />
 
       <input

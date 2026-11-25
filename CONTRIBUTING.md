@@ -31,5 +31,4 @@ No `.env` file is needed for development.
 | `app/` | Pages and API routes (`app/api/*`: ask, brief, shelve, import, PDF pages, key check) |
 | `components/` | Reader, library, landing and shared UI |
 | `lib/` | Provider clients (`fortytwo.ts`, `search.ts`, `llamaparse.ts`), prompts, article import, PDF parsing, the local store |
-| `content/` | The bundled sample texts |
 | `scripts/` | The telemetry-free Next.js launcher (`next.mjs`) and evaluation scripts |
