@@ -24,10 +24,3 @@ export const STARTER_PACK: PackItem[] = [
   { key: "quantum-cadence", url: `${MONAD}quantum-cadence-part-1`, title: "Quantum Cadence, Part 1: Consensus Recap", author: "Mohsen Ahmadvand", year: 2026, topic: "security" },
   { key: "category-labs", url: `${CAT}introducing-category-labs`, title: "Introducing Category Labs", author: "Category Labs", year: 2024, topic: "tech" },
 ];
-
-/** The bundled samples, shelved: where each goes, and its cover. */
-export const SAMPLE_SHELF: Record<string, { topic: TopicKey; cover: string }> = {
-  "on-a-piece-of-chalk": { topic: "science", cover: "/library/covers/on-a-piece-of-chalk.webp" },
-  "on-thinking-for-oneself": { topic: "philosophy", cover: "/library/covers/on-thinking-for-oneself.webp" },
-  "walden-reading": { topic: "learning", cover: "/library/covers/walden-reading.webp" },
-};

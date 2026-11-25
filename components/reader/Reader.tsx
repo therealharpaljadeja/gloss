@@ -6,7 +6,6 @@ import { ArrowUpRight, X } from "lucide-react";
 import { blockEl, selectBlock, spanIn } from "@/lib/anchor";
 import { displayArticle, isHeading, readingMinutes, titleClass, type Article } from "@/lib/article";
 import { ARTICLE_QUESTIONS } from "@/lib/actions";
-import { SAMPLE_QUESTIONS } from "@/lib/samples";
 import { fetchBrief } from "@/lib/ask";
 import { BRAND } from "@/lib/brand";
 import { indexArticle } from "@/lib/doc";
@@ -567,7 +566,7 @@ function ReaderInner({ article }: { article: Article }) {
                 </div>
               </footer>
 
-              <Composer ref={composerRef} currentBlock={askAnchor} suggestions={SAMPLE_QUESTIONS[article.id] ?? ARTICLE_QUESTIONS} />
+              <Composer ref={composerRef} currentBlock={askAnchor} suggestions={ARTICLE_QUESTIONS} />
             </div>
 
             <div className="rg-gutter" aria-hidden />
