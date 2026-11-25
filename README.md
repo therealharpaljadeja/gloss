@@ -71,8 +71,3 @@ Next.js telemetry is off in every `npm run` script and in the Docker image.
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Report security issues privately as described in [SECURITY.md](SECURITY.md).
-
-## Future Tasks
-
-- [ ] Ship it as a browser extension that opens the same margin on any page
-- [ ] Let a gloss compare two passages you pick at once
