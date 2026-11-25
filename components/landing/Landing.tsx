@@ -248,7 +248,14 @@ export function Landing() {
               onPickFile={() => fileRef.current?.click()}
               onPasteText={() => setPasteOpen(true)}
             />
-            <LibraryLine saved={saved} />
+            <LibraryLine
+              saved={saved}
+              onSuggest={(u) => {
+                if (busy) return;
+                setUrl(u);
+                void fromUrl(u);
+              }}
+            />
           </Hero>
         </div>
         <HomeBelow />

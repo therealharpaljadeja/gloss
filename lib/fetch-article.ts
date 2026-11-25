@@ -236,6 +236,10 @@ export async function fetchArticle(raw: string, opts: { pdf?: boolean } = {}): P
     // Pictures are a bonus; never lose the article over them.
   }
 
+  try {
+    separateAuthors(document as unknown as Document);
+  } catch {}
+
   let parsed: ReturnType<Readability["parse"]> = null;
   try {
     parsed = new Readability(document as unknown as Document, { charThreshold: 400 }).parse();
@@ -285,4 +289,16 @@ export async function fetchArticle(raw: string, opts: { pdf?: boolean } = {}): P
     addedAt: Date.now(),
   };
   return { ok: true, article };
+}
+
+/**
+ * Authors listed as sibling elements (a CMS list of links) run together as
+ * "Ada LovelaceAlan Turing" in Readability's byline, so comma them first.
+ */
+function separateAuthors(doc: Document) {
+  for (const list of Array.from(doc.querySelectorAll('[class*="author"], [rel="author"]'))) {
+    const names = Array.from(list.children).filter((c) => c.textContent?.trim());
+    if (names.length < 2 || names.some((c) => (c.textContent?.trim().length ?? 0) > 60 || c.textContent?.includes(","))) continue;
+    for (const c of names.slice(0, -1)) c.appendChild(doc.createTextNode(", "));
+  }
 }
