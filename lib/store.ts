@@ -68,14 +68,12 @@ export type LibraryItem = {
   /** One of the library's topics (lib/library.ts); missing until it has been sorted. */
   topic?: string;
   tags?: string[];
-  /** What the painted cover shows, written when the text is sorted. */
-  scene?: string;
   dek?: string;
   year?: number;
   sourceUrl?: string;
   /** The page's own lead picture. */
   image?: string;
-  /** A painted cover: a bundled one by path, or "painted" for one made for this text. */
+  /** A bundled cover, by path. */
   cover?: string;
   favorite?: boolean;
   /** When it was first read to the end. */

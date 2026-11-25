@@ -41,7 +41,7 @@ export const Composer = forwardRef<ComposerHandle, { currentBlock: () => string 
               type="button"
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => ask(s)}
-              className="rounded-full border border-rule bg-raised/95 px-3 py-1.5 text-[12.5px] text-ink-2 shadow-card backdrop-blur transition-colors hover:border-rule-strong hover:text-ink"
+              className="rounded-lg border border-rule bg-raised/95 px-3 py-1.5 text-[12.5px] text-ink-2 shadow-card backdrop-blur transition-colors hover:border-rule-strong hover:text-ink"
             >
               {s}
             </button>
@@ -53,7 +53,7 @@ export const Composer = forwardRef<ComposerHandle, { currentBlock: () => string 
           e.preventDefault();
           ask(q);
         }}
-        className={`pointer-events-auto mx-auto flex max-w-[34rem] items-center gap-2 rounded-[16px] border bg-raised/92 py-1.5 pl-4 pr-1.5 shadow-pop backdrop-blur-md transition-[border-color,max-width] duration-300 ease-[var(--ease-out)] ${
+        className={`pointer-events-auto mx-auto flex max-w-[34rem] items-center gap-2 rounded-[12px] border bg-raised/92 py-1.5 pl-4 pr-1.5 shadow-pop backdrop-blur-md transition-[border-color,max-width] duration-300 ease-[var(--ease-out)] ${
           focused ? "max-w-[38rem] border-rule-strong" : "border-rule"
         }`}
       >

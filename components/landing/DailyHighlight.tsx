@@ -69,7 +69,7 @@ export function DailyHighlight({ foot }: { foot?: ReactNode }) {
             onClick={() => updateHighlight(pick.articleId, pick.id, { review: keepInRotation(pick) })}
             data-tip="Keep it coming back"
             data-tip-hint="In a few days, then less often"
-            className="h-9 rounded-full bg-ink px-4 text-[13px] font-medium text-bg transition-transform active:scale-[0.97]"
+            className="h-9 rounded-lg bg-ink px-4 text-[13px] font-medium text-bg transition-transform active:scale-[0.97]"
           >
             Next
           </button>
@@ -78,7 +78,7 @@ export function DailyHighlight({ foot }: { foot?: ReactNode }) {
             onClick={() => updateHighlight(pick.articleId, pick.id, { review: retire(pick) })}
             data-tip="Done with this one"
             data-tip-hint="It stays a highlight, but leaves the review"
-            className="h-9 rounded-full px-4 text-[13px] text-ink-3 transition-colors hover:bg-sunk hover:text-ink"
+            className="h-9 rounded-lg px-4 text-[13px] text-ink-3 transition-colors hover:bg-sunk hover:text-ink"
           >
             Done with it
           </button>

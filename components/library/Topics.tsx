@@ -27,7 +27,7 @@ export function TopicGrid({ topics, onPick }: { topics: { topic: Topic; books: B
           <div className="relative flex items-end justify-between gap-4 px-5 pb-1 pt-4">
             <div className="min-w-0">
               <ViewTransition name={`topic-name-${t.key}`} share="lib-morph" default="none">
-                <h3 className="w-fit font-serif text-[27px] leading-[1.05] tracking-[-0.015em] text-ink">
+                <h3 className="w-fit font-medium tracking-[-0.02em] text-[27px] leading-[1.05] text-ink">
                   <Glyph k={t.key} size={30} className="mr-2 -mt-1" />
                   {t.name}
                 </h3>
@@ -66,12 +66,12 @@ export function TopicPage({ topic: t, books, tools, onOpen }: { topic: Topic; bo
         </ViewTransition>
         <div className="relative max-w-[640px]">
           <ViewTransition name={`topic-name-${t.key}`} share="lib-morph" default="none">
-            <h2 className="w-fit font-serif text-[clamp(40px,6vw,64px)] leading-[0.98] tracking-[-0.025em] text-ink">
+            <h2 className="w-fit font-medium tracking-[-0.02em] text-[clamp(40px,6vw,64px)] leading-[0.98] text-ink">
               <Glyph k={t.key} size={64} className="mr-3 !align-[-0.12em] max-sm:!size-[44px]" />
               {t.name}
             </h2>
           </ViewTransition>
-          <p className="mt-4 text-pretty font-serif text-[18px] leading-[1.5] text-ink-2">{t.blurb}</p>
+          <p className="mt-4 text-pretty font-medium tracking-[-0.02em] text-[18px] leading-[1.5] text-ink-2">{t.blurb}</p>
           <p className="mt-3 text-[13px] text-ink-3">
             {books.length} {books.length === 1 ? "piece" : "pieces"} · {hours(books)} of reading
             {books.some((b) => b.pct > 0 && b.pct < 1) && ` · ${books.filter((b) => b.pct > 0 && b.pct < 1).length} in progress`}

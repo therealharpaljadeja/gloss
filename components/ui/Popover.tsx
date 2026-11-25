@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 
 /** A button that opens a small panel. Closes on outside click and Escape. */
 export function Popover({
@@ -26,6 +26,19 @@ export function Popover({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const [shift, setShift] = useState(0);
+
+  // Keep the panel on screen when the trigger sits away from the edge it is anchored to (narrow phones).
+  // Measured from the trigger, not the panel: the panel is mid scale-in when this runs.
+  useLayoutEffect(() => {
+    if (!open || !ref.current) return;
+    const t = ref.current.getBoundingClientRect();
+    const pad = 12;
+    const w = Math.min(width, window.innerWidth - 2 * pad);
+    const left = align === "right" ? t.right - w : t.left;
+    const right = left + w;
+    setShift(left < pad ? pad - left : right > window.innerWidth - pad ? window.innerWidth - pad - right : 0);
+  }, [open, width, align]);
 
   useEffect(() => {
     if (!openOn) return;
@@ -74,7 +87,7 @@ export function Popover({
           role="dialog"
           aria-label={label}
           className={`pop absolute top-[calc(100%+8px)] z-[60] p-4 ${align === "right" ? "right-0" : "left-0"}`}
-          style={{ width, ["--origin" as string]: align === "right" ? "top right" : "top left" }}
+          style={{ width: `min(${width}px, calc(100vw - 24px))`, translate: shift ? `${shift}px 0` : undefined, ["--origin" as string]: align === "right" ? "top right" : "top left" }}
         >
           {children(() => setOpen(false))}
         </div>

@@ -1,9 +1,9 @@
 // The app's own PDF import as a fifth reader in the PDF eval: what a reader gets today with no extra step
-// (LiteParse in the browser, plus Qwen3.8 Flash for pages with no usable text).
+// (LiteParse in the browser, plus Nemotron 3.5 Super VL for pages with no usable text).
 //
 // For each page from run.py, it drops out/<page>/page.pdf on the landing page in headless Chrome, reads the
 // imported text back from IndexedDB and writes it as Markdown to out/<page>/gloss-today.md, with the time taken.
-// Needs the app running (npm run dev) and Google Chrome; TOGETHER_API_KEY is set as the reader's key, so
+// Needs the app running (npm run dev) and Google Chrome; FORTYTWO_API_KEY is set as the reader's key, so
 // scanned pages do not draw on the free allowance.
 //   node scripts/pdf-eval/app-import.mjs [outdir] [baseUrl] [--wait]
 // --wait stays on the reader until the background page upgrades (lib/upgrade.ts) finish, and writes that
@@ -19,7 +19,7 @@ const WAIT = process.argv.includes("--wait");
 const OUT = resolve(args[0] ?? new URL("./out", import.meta.url).pathname);
 const BASE = args[1] ?? "http://localhost:3100";
 const NAME = WAIT ? "gloss-hybrid" : "gloss-today";
-const KEY = process.env.TOGETHER_API_KEY ?? "";
+const KEY = process.env.FORTYTWO_API_KEY ?? "";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const profile = mkdtempSync(join(tmpdir(), "gloss-pdf-eval-"));
@@ -82,7 +82,7 @@ const timing = {};
 for (const id of pages) {
   await send("Page.navigate", { url: `${BASE}/` });
   await sleep(3000);
-  await evaluate(`localStorage.setItem("together:api-key", ${JSON.stringify(KEY)}); true`);
+  await evaluate(`localStorage.setItem("fortytwo:api-key", ${JSON.stringify(KEY)}); true`);
   const doc = await send("DOM.getDocument", { depth: -1 });
   const input = await send("DOM.querySelector", { nodeId: doc.root.nodeId, selector: "input[type=file]" });
   const t0 = Date.now();

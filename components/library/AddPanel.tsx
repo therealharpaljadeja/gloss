@@ -46,7 +46,7 @@ export function AddPanel({ tab, onTab, onClose, signedIn }: { tab: AddTab; onTab
               Save links manually
             </button>
           </div>
-          <button type="button" aria-label="Close" data-tip="Close" data-tip-kbd="Esc" onClick={onClose} className="grid size-9 place-items-center rounded-full text-ink-3 transition-colors hover:bg-sunk hover:text-ink">
+          <button type="button" aria-label="Close" data-tip="Close" data-tip-kbd="Esc" onClick={onClose} className="grid size-9 place-items-center rounded-lg text-ink-3 transition-colors hover:bg-sunk hover:text-ink">
             <X size={17} />
           </button>
         </header>
@@ -145,7 +145,7 @@ function Links() {
 
   return (
     <div className="mt-5">
-      <p className="text-[19px] font-serif leading-tight text-ink">Save links to your library</p>
+      <p className="text-[19px] font-medium tracking-[-0.02em] leading-tight text-ink">Save links to your library</p>
       <p className="mt-1 text-[13px] text-ink-3">
         One or many, a line each. Gloss reads each page in and sorts it onto a topic. PDFs work too. Leaving Pocket, Instapaper or Raindrop?{" "}
         <button type="button" onClick={() => fileRef.current?.click()} className="text-ink-2 underline decoration-rule-strong underline-offset-2 hover:text-ink">
@@ -350,7 +350,7 @@ function Agent({ signedIn }: { signedIn: boolean }) {
                     {c.lastUsedAt ? `last used ${new Date(c.lastUsedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}` : "not used yet"}
                   </span>
                 </span>
-                <button type="button" onClick={() => revoke(c.id)} className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12.5px] text-ink-3 transition-colors hover:bg-sunk hover:text-ink">
+                <button type="button" onClick={() => revoke(c.id)} className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[12.5px] text-ink-3 transition-colors hover:bg-sunk hover:text-ink">
                   <Trash2 size={13} /> Revoke
                 </button>
               </li>
@@ -367,7 +367,7 @@ function AgentIntro() {
     <div className="flex items-start gap-3.5">
       <Glyph k="agent" size={46} className="shrink-0" />
       <div>
-        <p className="font-serif text-[19px] leading-tight text-ink">Let your agent shelve for you</p>
+        <p className="font-medium tracking-[-0.02em] text-[19px] leading-tight text-ink">Let your agent shelve for you</p>
         <p className="mt-1 text-[13px] leading-[1.5] text-ink-3">
           Gloss has an MCP server. Give it to Grok Bot, Claude or ChatGPT, then ask: &ldquo;go through my X bookmarks from this month and save the articles to my Gloss library.&rdquo; Each one is read in, sorted onto a topic, and on your shelves the next time you open Gloss.
         </p>
@@ -408,7 +408,7 @@ function Setup({ token, label, origin }: { token: string; label: string; origin:
 function CopyBlock({ title, body, text }: { title: string; body: string; text: string }) {
   const [copied, setCopied] = useState(false);
   return (
-    <div className="rounded-[14px] border border-rule bg-bg p-3">
+    <div className="rounded-[12px] border border-rule bg-bg p-3">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-[13px] font-medium text-ink">{title}</p>
@@ -423,7 +423,7 @@ function CopyBlock({ title, body, text }: { title: string; body: string; text: s
               setTimeout(() => setCopied(false), 1600);
             } catch {}
           }}
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-sunk px-2.5 py-1 text-[12px] font-medium text-ink-2 transition-colors hover:text-ink"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-sunk px-2.5 py-1 text-[12px] font-medium text-ink-2 transition-colors hover:text-ink"
         >
           {copied ? <Check size={12} className="text-good" /> : <Copy size={12} />}
           {copied ? "Copied" : "Copy"}

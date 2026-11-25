@@ -11,7 +11,7 @@ type Props = {
   setUrl: (v: string) => void;
   busy: Busy;
   error: string | null;
-  /** The error is fixed by the reader's own Together key: offer the key menu. */
+  /** The error is fixed by the reader's own Fortytwo key: offer the key menu. */
   errorNeedsKey?: boolean;
   onSubmit: (url: string) => void;
   /** Keep it in the library for later, instead of reading it now. */
@@ -29,7 +29,7 @@ export const ImportBar = forwardRef<HTMLInputElement, Props>(function ImportBar(
           e.preventDefault();
           onSubmit(url);
         }}
-        className={`import-bar relative flex items-center gap-2 overflow-hidden rounded-[18px] border bg-raised p-1.5 pl-[18px] shadow-card transition-[border-color,box-shadow] duration-300 focus-within:border-rule-strong focus-within:shadow-pop ${
+        className={`import-bar relative flex items-center gap-2 overflow-hidden rounded-[12px] border bg-raised p-1.5 pl-[18px] shadow-card transition-[border-color,box-shadow] duration-300 focus-within:border-rule-strong focus-within:shadow-pop ${
           busy ? "border-rule-strong" : "border-rule"
         }`}
       >
@@ -90,7 +90,7 @@ export const ImportBar = forwardRef<HTMLInputElement, Props>(function ImportBar(
             <>
               {" "}
               <button type="button" onClick={openKeyMenu} className="font-medium text-ink underline decoration-rule-strong underline-offset-4">
-                Add your Together key
+                Add your Fortytwo key
               </button>
             </>
           )}

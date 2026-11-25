@@ -116,10 +116,10 @@ export function tidyTitle(s: string): string {
 /** A display size for the reader's title that keeps long titles from towering. */
 export function titleClass(title: string): string {
   const n = title.length;
-  if (n <= 26) return "text-[clamp(2.6rem,6.4vw,4.3rem)] leading-[1.02]";
-  if (n <= 50) return "text-[clamp(2.3rem,5vw,3.4rem)] leading-[1.06]";
-  if (n <= 90) return "text-[clamp(2rem,3.8vw,2.7rem)] leading-[1.1]";
-  return "text-[clamp(1.7rem,3vw,2.2rem)] leading-[1.14]";
+  if (n <= 26) return "text-[clamp(2rem,4vw,2.6rem)] leading-[1.1]";
+  if (n <= 50) return "text-[clamp(1.9rem,3.6vw,2.4rem)] leading-[1.12]";
+  if (n <= 90) return "text-[clamp(1.7rem,3vw,2.1rem)] leading-[1.15]";
+  return "text-[clamp(1.5rem,2.6vw,1.8rem)] leading-[1.2]";
 }
 
 /** Shouting headings inside a document, normalized for display without changing offsets. */

@@ -280,8 +280,8 @@ export function Landing({ signedIn: signedInAtLoad = false }: { signedIn?: boole
 
       {dragging && (
         <div className="pointer-events-none fixed inset-0 z-[90] grid place-items-center bg-bg/80 backdrop-blur-sm" style={{ animation: "fade 0.15s" }}>
-          <div className="rounded-[28px] border-[1.5px] border-dashed border-[var(--rubric)] px-16 py-14 text-center">
-            <p className="font-serif text-[40px] leading-none text-ink">Drop to read</p>
+          <div className="rounded-[12px] border-[1.5px] border-dashed border-[var(--rubric)] px-16 py-14 text-center">
+            <p className="font-medium tracking-[-0.02em] text-[40px] leading-none text-ink">Drop to read</p>
             <p className="mt-3 text-[14px] text-ink-3">PDF, .txt or .md</p>
           </div>
         </div>

@@ -5,13 +5,12 @@ import { Keyboard, NotebookPen } from "lucide-react";
 import { Account } from "@/components/account/Account";
 import { Lockup } from "@/components/brand/Gloss";
 import { KeyMenu } from "@/components/ui/KeyMenu";
-import { ListenButton } from "./Listen";
 import { SettingsMenu } from "@/components/ui/SettingsMenu";
 import { barBtn } from "@/components/ui/Popover";
 import { useGlosses, useHighlights, useStore } from "@/lib/store";
 import { useReader } from "./context";
 
-export function TopBar({ currentN, pastTitle, listenFrom }: { currentN: number | null; pastTitle: boolean; listenFrom: () => string | null }) {
+export function TopBar({ currentN, pastTitle }: { currentN: number | null; pastTitle: boolean }) {
   const { ix, jumpTo } = useReader();
   const [hidden, setHidden] = useState(false);
   const [scrolledUp, setScrolledUp] = useState(false);
@@ -94,7 +93,7 @@ export function TopBar({ currentN, pastTitle, listenFrom }: { currentN: number |
             <button
               type="button"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="min-w-0 truncate rounded-full px-2.5 py-1.5 font-serif text-[16px] leading-none text-ink transition-colors hover:bg-sunk"
+              className="min-w-0 truncate rounded-lg px-2.5 py-1.5 font-medium tracking-[-0.02em] text-[16px] leading-none text-ink transition-colors hover:bg-sunk"
               data-tip="Back to the top"
             >
               {ix.article.title}
@@ -106,7 +105,7 @@ export function TopBar({ currentN, pastTitle, listenFrom }: { currentN: number |
                   type="button"
                   onClick={() => jumpTo(section.start, { flash: false })}
                   data-tip="Go to the start of this part"
-                  className="min-w-0 truncate rounded-full px-2 py-1.5 leading-none text-ink-3 hover:bg-sunk hover:text-ink"
+                  className="min-w-0 truncate rounded-lg px-2 py-1.5 leading-none text-ink-3 hover:bg-sunk hover:text-ink"
                 >
                   {section.title}
                 </button>
@@ -121,7 +120,6 @@ export function TopBar({ currentN, pastTitle, listenFrom }: { currentN: number |
               <Keyboard size={17} strokeWidth={1.8} />
             </button>
           </span>
-          <ListenButton from={listenFrom} />
           <SettingsMenu />
           <KeyMenu />
           <button
@@ -136,7 +134,7 @@ export function TopBar({ currentN, pastTitle, listenFrom }: { currentN: number |
             <NotebookPen size={16} strokeWidth={1.8} />
             <span className="hidden sm:inline">Notebook</span>
             {count > 0 && (
-              <span className="min-w-[18px] rounded-full bg-[var(--rubric)] px-1.5 text-center text-[11px] font-semibold leading-[18px] tabular-nums text-white">{count}</span>
+              <span className="min-w-[18px] rounded-lg bg-[var(--rubric)] px-1.5 text-center text-[11px] font-semibold leading-[18px] tabular-nums text-white">{count}</span>
             )}
           </button>
           <Account />

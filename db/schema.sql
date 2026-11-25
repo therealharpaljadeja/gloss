@@ -61,7 +61,7 @@ create index if not exists glosses_user_updated on glosses (user_id, updated_at)
 create index if not exists briefs_user_updated on briefs (user_id, updated_at);
 create index if not exists progress_user_updated on progress (user_id, updated_at);
 
--- Free use of the shared Together key: one counter per reader per day.
+-- Free use of the shared Fortytwo key: one counter per reader per day.
 -- A subject is "answer:user:<clerk id>" or "answer:ip:<hashed address>"; raw addresses are never stored.
 create table if not exists free_usage (
   subject text not null,
@@ -74,15 +74,8 @@ create table if not exists free_usage (
 -- "free:all" is everyone's total, for the daily ceiling.
 alter table free_usage add column if not exists usd double precision not null default 0;
 
--- Covers painted for a signed-in reader's texts (opt-in), so other devices fetch them
--- instead of painting them again. A JPEG, base64.
-create table if not exists covers (
-  user_id text not null,
-  id text not null,             -- the article id
-  jpeg text not null,
-  created_at timestamptz not null default now(),
-  primary key (user_id, id)
-);
+-- Painted covers were dropped along with image generation.
+drop table if exists covers;
 
 -- Tokens that let a reader's agent (Grok Bot, Claude, ...) save to their library through /mcp.
 -- Only a hash of each token is kept; the token itself is shown once, when it is made.

@@ -21,7 +21,6 @@
 
 import { forgetDoc, loadDoc, saveDoc, useStore, type RemoteChanges } from "./store";
 import type { Article } from "./article";
-import { forgetCover } from "./covers";
 
 const COLLECTIONS = ["articles", "highlights", "glosses", "briefs", "progress"] as const;
 type Collection = (typeof COLLECTIONS)[number];
@@ -170,8 +169,6 @@ export function startSync(userId: string) {
     for (const r of changes.articles ?? []) {
       const before = base.seen.articles[r.id];
       if (!r.deleted && r.data && before && (r.data as { rev?: number }).rev !== undefined && stable(r.data) !== before[0]) void forgetDoc(r.id);
-      // Removed on another device: its painted cover goes from this one too.
-      if (r.deleted) void forgetCover(r.id);
     }
     useStore.getState().applyRemote(changes);
 

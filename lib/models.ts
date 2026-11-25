@@ -1,6 +1,6 @@
 /**
  * The model allow-list and wire types. Safe to import on the client: no keys,
- * no fetches. lib/together.ts does the network side.
+ * no fetches. lib/fortytwo.ts does the network side.
  */
 
 export type ModelEntry = {
@@ -23,6 +23,9 @@ export type ModelEntry = {
  * GLM-5.3 ignores every thinking-off flag (default effort: a 60s summary).
  * Also left out: Qwen3.8 (prints its reasoning into content with thinking off).
  *
+ * The bake-off ran on Together; Fortytwo serves the same V4.1 Flash, so it
+ * stayed. Fortytwo's prices: $0.30 in, $0.014 cached, $1.20 out per 1M.
+ *
  * Flash won on quality as well as speed and cost, so it answers everything:
  * there was a "Deep" choice (V4 Pro, then Kimi K3) and it was dropped
  * 2026-10-09. Older answers and settings may still name "pro"; anything that
@@ -30,12 +33,12 @@ export type ModelEntry = {
  */
 export const MODELS = {
   flash: {
-    id: "deepseek-ai/DeepSeek-V4.1-Flash",
+    id: "deepseek/deepseek-v4.1-flash-1017",
     label: "DeepSeek V4.1 Flash",
     short: "Quick",
     blurb: "Answers in about half a second. Best for most questions.",
     inPerM: 0.3,
-    cachedPerM: 0.006,
+    cachedPerM: 0.014,
     outPerM: 1.2,
   },
 } as const satisfies Record<string, ModelEntry>;
