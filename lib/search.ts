@@ -1,7 +1,8 @@
 /**
  * Web search with Exa, for answers that need the world beyond the text.
  * Fact-check always searches first; any other question offers the model a
- * web_search tool (WEB_TOOL) and lets it decide. Server-side only.
+ * web_search tool (WEB_TOOL) and lets it decide. Runs on the reader's own Exa
+ * key, sent with each request; without one, answers stay inside the text.
  *
  * "instant" search, verified 2026-10-10: about 0.5s and $0.004 a search with
  * excerpts, the same top results as "fast" ($0.007) on our queries. Excerpts
@@ -11,7 +12,7 @@
 import type { Source } from "./models";
 
 const EXA_URL = "https://api.exa.ai/search";
-/** What a search costs when Exa does not say, charged against a free reader's budget. */
+/** What a search costs when Exa does not say. */
 export const SEARCH_USD = 0.004;
 
 /** The tool the model is offered. Its description is what decides when it searches. */
@@ -30,13 +31,10 @@ export const WEB_TOOL = {
 } as const;
 const RESULTS = 5;
 
-export const searchEnabled = () => Boolean(process.env.EXA_API_KEY);
-
 export type WebResults = { sources: Source[]; excerpts: string[]; usd: number };
 
 /** Null when search is off, fails or times out: the answer goes ahead without it. */
-export async function webSearch(query: string, signal?: AbortSignal): Promise<WebResults | null> {
-  const key = process.env.EXA_API_KEY;
+export async function webSearch(query: string, key: string | undefined, signal?: AbortSignal): Promise<WebResults | null> {
   if (!key || !query.trim()) return null;
   try {
     const res = await fetch(EXA_URL, {

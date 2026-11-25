@@ -61,9 +61,9 @@ export async function* streamChat(req: {
   toolChoice?: "auto" | "none";
 }): AsyncGenerator<StreamEvent> {
   const model: ModelEntry = MODELS[req.model];
-  const apiKey = req.apiKey?.trim() || process.env.FORTYTWO_API_KEY;
+  const apiKey = req.apiKey?.trim();
   if (!apiKey) {
-    yield { type: "error", text: "No Fortytwo API key. Set FORTYTWO_API_KEY, or add your own key." };
+    yield { type: "error", text: "Add your Fortytwo API key to start." };
     return;
   }
 
@@ -172,8 +172,8 @@ export async function completeJSON<T>(req: {
   thinking?: boolean;
 }): Promise<{ ok: true; data: T; usage: Usage } | { ok: false; error: string }> {
   const model: ModelEntry = MODELS[req.model];
-  const apiKey = req.apiKey?.trim() || process.env.FORTYTWO_API_KEY;
-  if (!apiKey) return { ok: false, error: "No Fortytwo API key. Set FORTYTWO_API_KEY, or add your own key." };
+  const apiKey = req.apiKey?.trim();
+  if (!apiKey) return { ok: false, error: "Add your Fortytwo API key to start." };
 
   let res: Response;
   try {
@@ -213,4 +213,14 @@ export async function completeJSON<T>(req: {
   } catch {
     return { ok: false, error: "The model returned something that was not valid JSON. Try again." };
   }
+}
+
+/** The reader's own key, from the body or an Authorization header. Keys live in the browser; the server keeps none. */
+export function keyFrom(req: Request, body?: { apiKey?: string }): string | undefined {
+  return body?.apiKey?.trim() || req.headers.get("Authorization")?.replace(/^Bearer\s+/i, "").trim() || undefined;
+}
+
+/** The JSON a route answers with when the reader has not added their Fortytwo key. */
+export function needKey(message = "Add your Fortytwo API key to start. It stays in this browser."): Response {
+  return Response.json({ error: message, code: "need_key" }, { status: 401 });
 }

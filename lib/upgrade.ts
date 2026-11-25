@@ -131,7 +131,7 @@ export function startUpgrade(id: string, listener: (p: UpgradeProgress) => void)
         );
 
         for (const r of readings) {
-          // Free use spent: keep the text layer and the list, and try again another day.
+          // No key: keep the text layer and the list, and try again once one is added.
           if (r.spent) stopped = true;
           if (stopped) break;
           const doc = await loadDoc(id);

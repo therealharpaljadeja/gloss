@@ -3,11 +3,11 @@
 /**
  * "Read it more carefully": the PDF behind a text, read again by LlamaParse
  * through /api/pdf-careful, for layouts the free reader gets wrong (columns,
- * tables, maths, scans). Needs the reader's own Fortytwo key.
+ * tables, maths, scans). Runs on the reader's own LlamaParse key.
  */
 
 import { markdownBlocks, wordCount, type Article } from "./article";
-import { readApiKey } from "./ask";
+import { readKey } from "./ask";
 import { htmlTablesToMarkdown, stitchBlocks } from "./pdf";
 import { loadDoc, loadPdf, useStore } from "./store";
 
@@ -20,8 +20,8 @@ export async function readCarefully(shown: Article, signal?: AbortSignal): Promi
   const article = (await loadDoc(shown.id)) ?? shown;
   const pdf = await loadPdf(article.id);
   if (!pdf) return { ok: false, error: "The PDF is not on this device. Open it again from the file to read it carefully." };
-  const key = readApiKey();
-  if (!key) return { ok: false, error: "Reading carefully needs your Fortytwo key.", needKey: true };
+  const key = readKey("llama");
+  if (!key) return { ok: false, error: "Reading carefully needs your LlamaParse key.", needKey: true };
 
   const form = new FormData();
   form.append("file", pdf, "document.pdf");

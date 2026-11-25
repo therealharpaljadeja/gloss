@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Article } from "@/lib/article";
-import { openKeyMenu, readApiKey } from "@/lib/ask";
+import { openKeyMenu, readKey } from "@/lib/ask";
 import { readCarefully } from "@/lib/careful";
 import { startUpgrade, type UpgradeProgress } from "@/lib/upgrade";
 import { loadPdf, useGlosses, useHighlights } from "@/lib/store";
@@ -31,9 +31,9 @@ export function CarefulRead({ article }: { article: Article }) {
   useEffect(() => {
     let live = true;
     if (article.origin === "file") void loadPdf(article.id).then((b) => live && setHasPdf(Boolean(b)));
-    setHasKey(Boolean(readApiKey()));
+    setHasKey(Boolean(readKey("llama")));
     // The key can be added from the menu while this is on screen.
-    const recheck = () => setHasKey(Boolean(readApiKey()));
+    const recheck = () => setHasKey(Boolean(readKey("llama")));
     window.addEventListener("storage", recheck);
     window.addEventListener("focus", recheck);
     return () => {
@@ -53,7 +53,7 @@ export function CarefulRead({ article }: { article: Article }) {
     setState(r.ok ? { kind: "done" } : { kind: "error", error: r.error, needKey: r.needKey });
   };
   const start = () => {
-    if (!readApiKey()) return openKeyMenu();
+    if (!readKey("llama")) return openKeyMenu();
     if (marks > 0) setState({ kind: "confirm" });
     else void run();
   };

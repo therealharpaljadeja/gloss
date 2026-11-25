@@ -1,5 +1,4 @@
-import { chargeFree, checkFree, needKey } from "@/lib/quota";
-import { APP_UA, FORTYTWO_URL } from "@/lib/fortytwo";
+import { APP_UA, FORTYTWO_URL, keyFrom, needKey } from "@/lib/fortytwo";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -10,14 +9,12 @@ export const maxDuration = 120;
  * Nemotron 3.5 Super VL is the one model on Fortytwo that takes images.
  */
 const MODEL = "nvidia/nemotron-3.5-super-vl";
-const PRICE = { inPerM: 0.15, outPerM: 0.45 };
 /**
  * mode "layout": a page whose text layer reads but whose layout came out
  * badly (columns, tables, maths), read again in the background
  * (lib/upgrade.ts), by the same model.
  */
 const LAYOUT_MODEL = MODEL;
-const LAYOUT_PRICE = PRICE;
 const MAX_IMAGE_CHARS = 3_500_000;
 
 const PROMPT = `Transcribe this document page into clean Markdown, in reading order.
@@ -55,29 +52,21 @@ export async function POST(req: Request) {
   if (!/^data:image\/(jpeg|png|webp);base64,/.test(image)) return Response.json({ error: "Send the page as an image." }, { status: 400 });
   if (image.length > MAX_IMAGE_CHARS) return Response.json({ error: "That page image is too large." }, { status: 413 });
 
-  const headerKey = req.headers.get("Authorization")?.replace(/^Bearer\s+/i, "").trim();
-  const own = body.apiKey?.trim() || headerKey || undefined;
-  let free: Awaited<ReturnType<typeof checkFree>> | null = null;
-  if (!own) {
-    if (!process.env.FORTYTWO_API_KEY) return needKey(null);
-    free = await checkFree(req, 90);
-    if (!free.ok) return needKey(free);
-  }
+  const own = keyFrom(req, body);
+  if (!own) return needKey("Add your Fortytwo key to read scanned pages.");
 
   const layout = body.mode === "layout";
   const model = layout ? LAYOUT_MODEL : MODEL;
-  const price = layout ? LAYOUT_PRICE : PRICE;
 
   let res: Response;
   try {
     res = await fetch(FORTYTWO_URL, {
       method: "POST",
       signal: req.signal,
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${own ?? process.env.FORTYTWO_API_KEY}`, "User-Agent": APP_UA },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${own}`, "User-Agent": APP_UA },
       body: JSON.stringify({
         model,
         stream: true,
-        stream_options: { include_usage: true },
         temperature: 0,
         max_tokens: 4096,
         reasoning_effort: "none",
@@ -96,10 +85,8 @@ export async function POST(req: Request) {
     return Response.json({ error: msg }, { status: res.status === 401 || res.status === 429 ? res.status : 502 });
   }
 
-  // Gather the stream: the content, and what it cost.
+  // Gather the stream.
   let text = "";
-  type Usage = { prompt_tokens?: number; completion_tokens?: number };
-  let usage: Usage | null = null;
   const reader = res.body.getReader();
   const dec = new TextDecoder();
   let buf = "";
@@ -113,16 +100,11 @@ export async function POST(req: Request) {
       const data = line.trim().replace(/^data:\s*/, "");
       if (!data || data === "[DONE]" || !line.trim().startsWith("data:")) continue;
       try {
-        const j = JSON.parse(data) as { choices?: { delta?: { content?: string } }[]; usage?: Usage };
+        const j = JSON.parse(data) as { choices?: { delta?: { content?: string } }[] };
         text += j.choices?.[0]?.delta?.content ?? "";
-        if (j.usage) usage = j.usage;
       } catch {}
     }
   }
 
-  if (free) {
-    const cost = ((usage?.prompt_tokens ?? 1900) * price.inPerM + (usage?.completion_tokens ?? 1000) * price.outPerM) / 1_000_000;
-    await chargeFree(free.subject, cost);
-  }
   return Response.json({ markdown: clean(text) });
 }

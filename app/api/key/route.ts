@@ -1,4 +1,3 @@
-import { peekFree } from "@/lib/quota";
 import { APP_UA, FORTYTWO_API } from "@/lib/fortytwo";
 
 export const runtime = "nodejs";
@@ -20,10 +19,4 @@ export async function POST(req: Request) {
   } catch {
     return Response.json({ ok: false });
   }
-}
-
-/** Whether there is a shared key, and how much of today's free allowance is left on it. */
-export async function GET(req: Request) {
-  const house = Boolean(process.env.FORTYTWO_API_KEY);
-  return Response.json({ house, free: house ? await peekFree(req) : null });
 }

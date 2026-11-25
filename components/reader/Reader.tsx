@@ -10,7 +10,6 @@ import { SAMPLE_QUESTIONS } from "@/lib/samples";
 import { fetchBrief } from "@/lib/ask";
 import { BRAND } from "@/lib/brand";
 import { indexArticle } from "@/lib/doc";
-import { fetchText } from "@/lib/sync";
 import { loadDoc, useGlosses, useHighlights, useStore, type Anchor } from "@/lib/store";
 import { applySettings } from "@/lib/settings";
 import { GlossWordmark } from "@/components/brand/Gloss";
@@ -21,7 +20,6 @@ import { Composer, type ComposerHandle } from "./Composer";
 import { ReaderContext, useMedia, useReader, type ReaderApi } from "./context";
 import { GlossCard } from "./GlossCard";
 import { Lens, type OpenHighlight } from "./Lens";
-import { SignInNudge } from "@/components/account/SignInNudge";
 import { Margin } from "./Margin";
 import { Notebook } from "./Notebook";
 import { Peek, Shortcuts, Toast } from "./Overlays";
@@ -40,10 +38,7 @@ export function Reader({ id, initial }: { id: string; initial: Article | null })
     hydrate();
     applySettings(useStore.getState().settings);
     if (!initial) {
-      // Not on this device: it may be in the reader's account, fetched now that it is opened.
-      void loadDoc(id)
-        .then((a) => a ?? fetchText(id))
-        .then((a) => (a ? setArticle(a) : setMissing(true)));
+      void loadDoc(id).then((a) => (a ? setArticle(a) : setMissing(true)));
     }
   }, [hydrate, id, initial]);
 
@@ -79,7 +74,7 @@ export function Reader({ id, initial }: { id: string; initial: Article | null })
         <div>
           <GlossWordmark />
           <p className="mt-6 font-medium tracking-[-0.02em] text-[26px] text-ink">This text is not on this device.</p>
-          <p className="mt-2 text-[14px] text-ink-3">Imported texts live in the browser that imported them, or in your account when you are signed in.</p>
+          <p className="mt-2 text-[14px] text-ink-3">Imported texts live only in the browser that imported them.</p>
           <Link href="/" className="mt-6 inline-flex h-10 items-center rounded-lg bg-ink px-5 text-[14px] font-medium text-bg">
             Back to the library
           </Link>
@@ -590,7 +585,6 @@ function ReaderInner({ article }: { article: Article }) {
         )}
 
         <Lens rootEl={articleEl} openHighlight={openHl} />
-        <SignInNudge />
         <Notebook />
         <Peek peek={peek} />
         <Shortcuts />

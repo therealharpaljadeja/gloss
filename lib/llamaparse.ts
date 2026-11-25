@@ -1,6 +1,6 @@
 /**
  * LlamaParse, for "Read it more carefully": a hard PDF (two columns, tables,
- * maths, a scan) read again by a layout-aware parser. Server-side only.
+ * maths, a scan) read again by a layout-aware parser, on the reader's own key.
  *
  * API v2: upload with a tier, poll the job, fetch Markdown per page.
  * Verified 2026-10-10: a page takes a few seconds; cost_effective bills 3
@@ -13,9 +13,8 @@ export type Tier = "fast" | "cost_effective" | "agentic" | "agentic_plus";
 
 export type Parsed = { ok: true; pages: string[]; credits: number | null } | { ok: false; error: string };
 
-export async function parseCarefully(pdf: Blob, opts: { tier: Tier; maxPages: number; signal?: AbortSignal; deadlineMs?: number }): Promise<Parsed> {
-  const key = process.env.LLAMA_CLOUD_API_KEY;
-  if (!key) return { ok: false, error: "Careful reading is not set up on this server." };
+export async function parseCarefully(pdf: Blob, opts: { key: string; tier: Tier; maxPages: number; signal?: AbortSignal; deadlineMs?: number }): Promise<Parsed> {
+  const key = opts.key;
   const auth = { Authorization: `Bearer ${key}` };
   const started = Date.now();
   const deadline = opts.deadlineMs ?? 240_000;

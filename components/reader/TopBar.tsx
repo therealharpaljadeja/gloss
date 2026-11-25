@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Keyboard, NotebookPen } from "lucide-react";
-import { Account } from "@/components/account/Account";
 import { Lockup } from "@/components/brand/Gloss";
 import { KeyMenu } from "@/components/ui/KeyMenu";
 import { SettingsMenu } from "@/components/ui/SettingsMenu";
@@ -137,7 +136,6 @@ export function TopBar({ currentN, pastTitle }: { currentN: number | null; pastT
               <span className="min-w-[18px] rounded-lg bg-[var(--rubric)] px-1.5 text-center text-[11px] font-semibold leading-[18px] tabular-nums text-white">{count}</span>
             )}
           </button>
-          <Account />
         </nav>
       </div>
       <span ref={barRef} aria-hidden className="absolute inset-x-0 -bottom-px h-[2px] origin-left bg-[var(--rubric)] opacity-80" style={{ transform: "scaleX(0)" }} />

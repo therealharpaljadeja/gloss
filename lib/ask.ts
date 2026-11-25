@@ -7,15 +7,19 @@ import { uid, useStore, type Anchor, type Gloss, type Turn } from "./store";
 import type { ModelKey, StreamEvent, Usage } from "./models";
 import { MODELS, modelOf } from "./models";
 
-const KEY_STORAGE = "fortytwo:api-key";
+/** The reader's keys, kept in this browser only and sent with each request. Gloss's server keeps none. */
+export const KEY_STORAGE = { fortytwo: "fortytwo:api-key", exa: "exa:api-key", llama: "llamaparse:api-key" } as const;
+export type KeyName = keyof typeof KEY_STORAGE;
 
-export function readApiKey(): string {
+export function readKey(name: KeyName): string {
   try {
-    return localStorage.getItem(KEY_STORAGE) ?? "";
+    return localStorage.getItem(KEY_STORAGE[name]) ?? "";
   } catch {
     return "";
   }
 }
+
+export const readApiKey = () => readKey("fortytwo");
 
 const controllers = new Map<string, AbortController>();
 
@@ -64,6 +68,7 @@ async function stream(ix: DocIndex, glossId: string, modelKey: ModelKey) {
       signal: ctrl.signal,
       body: JSON.stringify({
         apiKey: apiKey || undefined,
+        exaKey: readKey("exa") || undefined,
         model: modelKey,
         length: st.settings.length,
         doc: docPayload(ix, g.anchor?.start.b ?? g.at),
@@ -72,7 +77,6 @@ async function stream(ix: DocIndex, glossId: string, modelKey: ModelKey) {
         search: st.settings.search,
       }),
     });
-    noteFree(res);
     if (!res.ok || !res.body) {
       const { error, needKey } = await failure(res);
       update((t) => ({ ...t, streaming: false, error, needKey }));
@@ -192,19 +196,12 @@ export async function fetchBrief(ix: DocIndex) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ apiKey: apiKey || undefined, model: modelKey, doc: docPayload(ix) }),
     });
-    noteFree(res);
     const j = (await res.json()) as { brief?: BriefData; usage?: Usage; error?: string; code?: string };
     if (j.brief) useStore.getState().setBrief(id, { status: "ready", data: j.brief, usage: j.usage, modelKey, at: Date.now() });
     else useStore.getState().setBrief(id, { status: "error", error: j.error ?? "Could not write the gloss.", needKey: j.code === "need_key" });
   } catch (e) {
     useStore.getState().setBrief(id, { status: "error", error: `Connection lost: ${String(e)}` });
   }
-}
-
-/** Tell the key menu how many free answers are left today, when the server says. */
-function noteFree(res: Response) {
-  const left = res.headers.get("X-Free-Left");
-  if (left !== null) window.dispatchEvent(new CustomEvent("gloss:free", { detail: Number(left) }));
 }
 
 /** A failed request's message, and whether the fix is the reader's own key. */
@@ -247,9 +244,8 @@ export async function streamAsk(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       signal,
-      body: JSON.stringify({ ...body, apiKey: apiKey || undefined, model: modelOf(useStore.getState().settings.model) }),
+      body: JSON.stringify({ ...body, apiKey: apiKey || undefined, exaKey: readKey("exa") || undefined, model: modelOf(useStore.getState().settings.model) }),
     });
-    noteFree(res);
     if (!res.ok || !res.body) {
       on.error?.((await failure(res)).error);
       return;

@@ -1,10 +1,8 @@
 import { buildMessages, isLengthKey, webBlock, type DocPayload, type ThreadPayload } from "@/lib/prompts";
-import { DEFAULT_MODEL, isModelKey, streamChat, type ChatMessage, type StreamEvent } from "@/lib/fortytwo";
+import { DEFAULT_MODEL, isModelKey, keyFrom, needKey, streamChat, type ChatMessage, type StreamEvent } from "@/lib/fortytwo";
 import { ACTIONS } from "@/lib/actions";
-import { chargeFree, checkFree, estimateUsd, needKey } from "@/lib/quota";
-import { MODELS, type Usage } from "@/lib/models";
-import { allow, clientId } from "@/lib/ratelimit";
-import { searchEnabled, searchQuery, WEB_TOOL, webSearch } from "@/lib/search";
+import type { Usage } from "@/lib/models";
+import { searchQuery, WEB_TOOL, webSearch } from "@/lib/search";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -14,6 +12,8 @@ const MAX_DOC_CHARS = 600_000;
 
 type Body = {
   apiKey?: string;
+  /** The reader's Exa key, for web search. Without it answers stay inside the text. */
+  exaKey?: string;
   model?: string;
   length?: string;
   doc?: DocPayload;
@@ -43,22 +43,14 @@ export async function POST(req: Request) {
   const history = (body.history ?? []).slice(-12).filter((m) => m && (m.role === "user" || m.role === "assistant"));
 
   const model = isModelKey(body.model) ? body.model : DEFAULT_MODEL;
-  const headerKey = req.headers.get("Authorization")?.replace(/^Bearer\s+/i, "").trim();
-  const apiKey = body.apiKey?.trim() || headerKey || undefined;
-  // No key of their own: a few cents of answers a day on the shared key, then they bring one.
-  let free: Awaited<ReturnType<typeof checkFree>> | null = null;
-  if (!apiKey) {
-    if (!process.env.FORTYTWO_API_KEY) return needKey(null);
-    free = await checkFree(req);
-    if (!free.ok) return needKey(free);
-  }
+  const apiKey = keyFrom(req, body);
+  if (!apiKey) return needKey();
+  const exaKey = body.exaKey?.trim() || undefined;
 
   // Fact-check looks things up first, always. Any other question offers the model a web_search tool,
-  // unless the reader turned search off, and the model decides. Free readers pay for a search from
-  // their daily budget; readers with their own key get a generous daily cap.
-  const canSearch = () => searchEnabled() && (free !== null || allow(`search:${clientId(req)}`, 150, 86_400_000));
-  const forced = thread.action === "check" && canSearch();
-  const offerTool = !forced && searchEnabled() && body.search !== false;
+  // unless the reader turned search off, and the model decides. Both need the reader's Exa key.
+  const forced = thread.action === "check" && Boolean(exaKey);
+  const offerTool = !forced && Boolean(exaKey) && body.search !== false;
   const latest = [...history].reverse().find((m) => m.role === "user")?.content;
   const length = isLengthKey(body.length) ? body.length : "normal";
   const maxTokens = body.length === "long" ? 1400 : 900;
@@ -69,7 +61,6 @@ export async function POST(req: Request) {
   const stream = new ReadableStream({
     async start(controller) {
       let web: string | undefined;
-      let searchUsd = 0;
       // A search and two model calls make one answer, so their usage is added up into one receipt.
       let usage: Usage | null = null;
       const add = (u: Usage) =>
@@ -78,9 +69,8 @@ export async function POST(req: Request) {
           : u);
       const search = async (query: string) => {
         controller.enqueue(send({ type: "searching" }));
-        const found = await webSearch(query, req.signal);
+        const found = await webSearch(query, exaKey, req.signal);
         if (found) {
-          searchUsd += found.usd;
           controller.enqueue(send({ type: "sources", sources: found.sources }));
         }
         return found;
@@ -110,7 +100,7 @@ export async function POST(req: Request) {
           try {
             query = String((JSON.parse(call.args) as { query?: string }).query ?? "");
           } catch {}
-          const found = query && canSearch() ? await search(query) : null;
+          const found = query ? await search(query) : null;
           await relay(
             [
               ...messages,
@@ -126,14 +116,12 @@ export async function POST(req: Request) {
         if (!req.signal.aborted) controller.enqueue(send({ type: "error", text: `Stream failed: ${String(e)}` }));
       } finally {
         controller.close();
-        if (free) await chargeFree(free.subject, ((usage as Usage | null)?.costUsd ?? estimateUsd(docChars, MODELS[model].inPerM)) + searchUsd);
       }
     },
   });
 
   return new Response(stream, {
     headers: {
-      ...(free ? { "X-Free-Left": free.left.toFixed(3) } : {}),
       "Content-Type": "text/event-stream; charset=utf-8",
       "Cache-Control": "no-cache, no-transform",
       Connection: "keep-alive",
