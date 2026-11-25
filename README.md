@@ -58,6 +58,7 @@ Things to know when hosting:
 - **Request time:** answers and careful PDF reads can take up to 5 minutes, and briefs a couple of minutes. Give your host or proxy at least a 300-second timeout.
 - **Streaming:** answers stream as server-sent events. Behind nginx, keep `proxy_buffering off` (Gloss also sends `X-Accel-Buffering: no`).
 - **Upload size:** "Read it more carefully" uploads the PDF to your server, up to 4.3 MB. Allow that body size in your proxy.
+- **HTTPS:** readers' keys travel with each request, so serve Gloss over HTTPS on any public address. Put the Docker or Node server behind a TLS-terminating proxy (Caddy, nginx, or your host's), not on a bare HTTP port.
 - **Your users' keys pass through your server** with each request. Gloss never stores or logs them; see [SECURITY.md](SECURITY.md).
 
 | Variable | Required | What it does |
