@@ -3,7 +3,7 @@ import { completeJSON, DEFAULT_MODEL, isModelKey, keyFrom, needKey } from "@/lib
 import { undash, type BriefData } from "@/lib/article";
 
 export const runtime = "nodejs";
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 export async function POST(req: Request) {
   let body: { apiKey?: string; model?: string; doc?: DocPayload };
