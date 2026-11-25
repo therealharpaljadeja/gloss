@@ -32,9 +32,44 @@
 
    Keys stay in the browser and go with each request; the server stores none. Your library, highlights and notes live in the browser too.
 
-## Deploying
+## Self-hosting
 
-Click **Deploy with Vercel** above. No environment variables or database are needed: readers paste their own keys. Vercel's free Hobby plan is enough for personal use (functions may run up to 300 seconds, which long briefs and careful PDF reads need). Optionally set `NEXT_PUBLIC_SITE_URL` to your custom domain for canonical and social card URLs; it defaults to the Vercel production URL.
+Gloss needs no environment variables, database or API keys on the server: readers paste their own keys, and their library lives in their browser. Any host that runs Node.js 20.9+ or Docker works.
+
+**Vercel (free):** click **Deploy with Vercel** above. The Hobby plan is enough for personal use; functions may run up to 300 seconds, which long briefs and careful PDF reads need.
+
+**Docker:**
+
+```bash
+docker build -t gloss .
+docker run -p 3100:3100 gloss
+```
+
+**Node.js** (Railway, Render, Fly.io, a VPS):
+
+```bash
+npm ci
+npm run build
+npm start   # port 3100; or PORT=8080 node scripts/next.mjs start
+```
+
+Things to know when hosting:
+
+- **Request time:** answers and careful PDF reads can take up to 5 minutes, and briefs a couple of minutes. Give your host or proxy at least a 300-second timeout.
+- **Streaming:** answers stream as server-sent events. Behind nginx, keep `proxy_buffering off` (Gloss also sends `X-Accel-Buffering: no`).
+- **Upload size:** "Read it more carefully" uploads the PDF to your server, up to 4.3 MB. Allow that body size in your proxy.
+- **Your users' keys pass through your server** with each request. Gloss never stores or logs them; see [SECURITY.md](SECURITY.md).
+
+| Variable | Required | What it does |
+|---|---|---|
+| `NEXT_PUBLIC_SITE_URL` | No | Public origin for canonical and social card URLs. Set at build time (`docker build --build-arg NEXT_PUBLIC_SITE_URL=https://example.com`). Defaults to the Vercel production URL, or `http://localhost:3100`. |
+| `PORT` | No | Port for `node scripts/next.mjs start` and the Docker image. Defaults to 3100. |
+
+Next.js telemetry is off in every `npm run` script and in the Docker image.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Report security issues privately as described in [SECURITY.md](SECURITY.md).
 
 ## Future Tasks
 
