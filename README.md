@@ -1,10 +1,10 @@
-<a href="https://usegloss.io">
+<a href="https://gloss-ruddy.vercel.app">
   <img alt="Gloss" src="./public/og.png">
   <h1 align="center">Gloss</h1>
 </a>
 
 <p align="center">
-  An open source AI reader for articles and PDFs. Select any line, ask a question, and get a cited answer in the margin. Powered by [Fortytwo](https://fortytwo.network).
+  An open source AI reader for articles and PDFs. Select any line, ask a question, and get a cited answer in the margin. Powered by <a href="https://fortytwo.network">Fortytwo</a>.
 </p>
 
 <p align="center">
