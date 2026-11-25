@@ -56,7 +56,7 @@ export function importFromText(text: string): ImportResult {
 /**
  * Saves an imported article (and a PDF's original file) and puts it on the
  * shelf; then, in the background, the library sorts it onto a topic.
- * `extra`: shelf fields known already, like a starter classic's topic and cover.
+ * `extra`: shelf fields known already, like a starter-pack post's topic.
  */
 export async function keep(a: Article, file?: Blob, extra?: Partial<LibraryItem>): Promise<string | null> {
   if (!a.blocks.length) return "There was no readable text in that.";
