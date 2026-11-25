@@ -38,7 +38,7 @@ export function KeyMenu() {
       openOn="gloss:key"
       trigger={
         <>
-          {ready ? <span aria-hidden className="size-1.5 rounded-full bg-good" /> : <KeyRound size={15} aria-hidden />}
+          <KeyRound size={15} aria-hidden />
           {!ready && <span className="hidden sm:inline">Add a key</span>}
         </>
       }
