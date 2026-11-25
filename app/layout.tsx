@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
 import { Atkinson_Hyperlegible_Next, Inter, JetBrains_Mono, Literata, Newsreader } from "next/font/google";
 import { BOOT_SCRIPT } from "@/lib/settings";
 import "./globals.css";
@@ -73,8 +72,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         {children}
         <Tooltips />
-        {/* Plausible: cookieless page views, from the production site only, so previews and local runs never count. */}
-        {process.env.VERCEL_ENV === "production" && <Script defer data-domain="usegloss.io" src="https://plausible.io/js/script.js" strategy="afterInteractive" />}
       </body>
     </html>
   );

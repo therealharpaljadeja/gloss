@@ -14,6 +14,7 @@
 - [Exa](https://exa.ai) for web search
 - [LiteParse](https://github.com/run-llama/liteparse) for in-browser PDF parsing, with Nemotron 3.5 Super VL on Fortytwo for scanned pages
 - No accounts and no server-side keys: readers paste their own keys, kept in their browser
+- No analytics or telemetry: no tracking script, and `npm run` scripts turn off Next.js telemetry
 - Next.js app router with Tailwind
 
 ## Cloning & running

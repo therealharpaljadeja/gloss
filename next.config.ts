@@ -3,7 +3,6 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   serverExternalPackages: ["linkedom"],
   poweredByHeader: false,
-  experimental: { agentUpgrade: "security" },
   async headers() {
     return [
       {
