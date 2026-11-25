@@ -165,7 +165,7 @@ export function Library() {
     return {
       count: books.length,
       topics: topics.filter((t) => t.topic.key !== "unsorted").length,
-      hours: Math.max(1, Math.round(mins / 60)),
+      hours: mins ? Math.max(1, Math.round(mins / 60)) : 0,
       reading: books.filter((b) => b.pct > 0 && b.pct < 1).length,
       read: books.filter((b) => b.pct >= 1).length,
     };
@@ -259,9 +259,11 @@ export function Library() {
                           <b>{stats.topics}</b> {stats.topics === 1 ? "topic" : "topics"}
                         </span>
                       )}
-                      <span>
-                        <b>{stats.hours}</b> {stats.hours === 1 ? "hour" : "hours"} of reading
-                      </span>
+                      {stats.hours > 0 && (
+                        <span>
+                          <b>{stats.hours}</b> {stats.hours === 1 ? "hour" : "hours"} of reading
+                        </span>
+                      )}
                       {stats.reading > 0 && (
                         <span>
                           <b>{stats.reading}</b> in progress
