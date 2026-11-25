@@ -7,6 +7,10 @@
   An open source AI reader for articles and PDFs. Select any line, ask a question, and get a cited answer in the margin. Powered by [Fortytwo](https://fortytwo.network).
 </p>
 
+<p align="center">
+  <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ftherealharpaljadeja%2Fgloss&project-name=gloss&repository-name=gloss"><img src="https://vercel.com/button" alt="Deploy with Vercel"></a>
+</p>
+
 ## Tech stack
 
 - [DeepSeek V4.1 Flash](https://docs.fortytwo.network/docs/models) for the LLM
@@ -19,7 +23,7 @@
 
 ## Cloning & running
 
-1. Clone the repo: `git clone https://github.com/Nutlope/gloss`
+1. Clone the repo: `git clone https://github.com/therealharpaljadeja/gloss`
 2. Run `npm install`
 3. Run `npm run dev`, open http://localhost:3100 and paste your keys from the key button:
    - **[Fortytwo API key](https://platform.fortytwo.network)** (required)
@@ -27,6 +31,10 @@
    - **[LlamaParse API key](https://cloud.llamaindex.ai/api-key)** (optional, for "Read it more carefully" on hard PDFs)
 
    Keys stay in the browser and go with each request; the server stores none. Your library, highlights and notes live in the browser too.
+
+## Deploying
+
+Click **Deploy with Vercel** above. No environment variables or database are needed: readers paste their own keys. Vercel's free Hobby plan is enough for personal use (functions may run up to 300 seconds, which long briefs and careful PDF reads need). Optionally set `NEXT_PUBLIC_SITE_URL` to your custom domain for canonical and social card URLs; it defaults to the Vercel production URL.
 
 ## Future Tasks
 
