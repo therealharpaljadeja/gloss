@@ -12,15 +12,10 @@ import { Desk, DeskLink } from "./Desk";
 
 const RECENT = 3;
 
-const STEPS = [
-  { title: "Paste a link", body: "An article, a chapter or a PDF." },
-  { title: "Select any line", body: "A word, a sentence, a passage." },
-  { title: "Ask it anything", body: "The answer lands in the margin, citing the text." },
-];
-
 /**
  * What lies on the desk. With highlights, they are yours: today's review while
- * one is due, otherwise the lines you marked last. Before that, how it works.
+ * one is due, otherwise the lines you marked last. Before that, nothing, so the
+ * link bar sits alone in the middle of the page.
  */
 export function HomeBelow() {
   const hydrated = useStore((s) => s.hydrated);
@@ -44,26 +39,9 @@ export function HomeBelow() {
     [highlights, titleOf]
   );
 
-  // Held open at its full size until the shelf is read, so nothing shifts when it fills.
-  if (!hydrated) return <div className="desk is-holding" aria-hidden />;
+  if (!hydrated || !all.length) return null;
 
-  const foot = all.length ? "These live in this browser only." : null;
-
-  // Before any highlights: Hassan's three steps, for first-timers.
-  if (!all.length)
-    return (
-      <Desk label="How it works" foot={foot}>
-        <ol className="desk-tiles">
-          {STEPS.map((s, i) => (
-            <li key={s.title} className="desk-tile is-step" style={{ ["--i" as string]: i }}>
-              <span className="desk-step-n">{i + 1}</span>
-              <p className="mt-3 text-[14.5px] font-medium text-ink">{s.title}</p>
-              <p className="mt-1 text-[13.5px] leading-[1.42] text-ink-3">{s.body}</p>
-            </li>
-          ))}
-        </ol>
-      </Desk>
-    );
+  const foot = "These live in this browser only.";
 
   if (todaysReview(all).deck.length > 0) return <DailyHighlight foot={foot} />;
 
