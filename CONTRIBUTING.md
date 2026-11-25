@@ -4,7 +4,7 @@ Thanks for helping. Gloss is a small Next.js app with no accounts, no database a
 
 ## Setup
 
-1. Node.js 20.9 or later (CI uses 22).
+1. Node.js 20.19 or later (CI uses 22). Older versions cannot load the article importer's ESM-only dependencies.
 2. `npm install`
 3. `npm run dev` and open http://localhost:3100.
 4. Paste your [Fortytwo API key](https://platform.fortytwo.network) from the key button in the top bar. Exa and LlamaParse keys are optional.

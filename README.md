@@ -34,7 +34,7 @@
 
 ## Self-hosting
 
-Gloss needs no environment variables, database or API keys on the server: readers paste their own keys, and their library lives in their browser. Any host that runs Node.js 20.9+ or Docker works.
+Gloss needs no environment variables, database or API keys on the server: readers paste their own keys, and their library lives in their browser. Any host that runs Node.js 20.19+ or Docker works.
 
 **Vercel (free):** click **Deploy with Vercel** above. The Hobby plan is enough for personal use; functions may run up to 300 seconds, which long briefs and careful PDF reads need.
 
