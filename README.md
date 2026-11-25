@@ -13,22 +13,22 @@
 - [Fortytwo](https://docs.fortytwo.network) for LLM inference
 - [Exa](https://exa.ai) for web search
 - [LiteParse](https://github.com/run-llama/liteparse) for in-browser PDF parsing, with Nemotron 3.5 Super VL on Fortytwo for scanned pages
-- [Clerk](https://clerk.com) for optional auth and [Neon](https://neon.tech) for syncing your library
+- No accounts and no server-side keys: readers paste their own keys, kept in their browser
+- No analytics or telemetry: no tracking script, and `npm run` scripts turn off Next.js telemetry
 - Next.js app router with Tailwind
 
 ## Cloning & running
 
 1. Clone the repo: `git clone https://github.com/Nutlope/gloss`
-2. Create a `.env.local` file (use `.env.example` for reference) and add your API keys:
-   - **[Fortytwo API key](https://platform.fortytwo.network)**: `FORTYTWO_API_KEY=`
-   - **Database URL** from [Neon](https://neon.tech): `DATABASE_URL=`
-   - **Clerk keys** from [Clerk](https://clerk.com): `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=` and `CLERK_SECRET_KEY=`
-   - **Exa API key** (optional, for web search): `EXA_API_KEY=`
-3. Run `npm install` and `npm run db:migrate` to install dependencies and create the tables
-4. Run `npm run dev` and open http://localhost:3100
+2. Run `npm install`
+3. Run `npm run dev`, open http://localhost:3100 and paste your keys from the key button:
+   - **[Fortytwo API key](https://platform.fortytwo.network)** (required)
+   - **[Exa API key](https://dashboard.exa.ai/api-keys)** (optional, for web search)
+   - **[LlamaParse API key](https://cloud.llamaindex.ai/api-key)** (optional, for "Read it more carefully" on hard PDFs)
+
+   Keys stay in the browser and go with each request; the server stores none. Your library, highlights and notes live in the browser too.
 
 ## Future Tasks
 
 - [ ] Ship it as a browser extension that opens the same margin on any page
 - [ ] Let a gloss compare two passages you pick at once
-- [ ] Move the shared-key rate limit to a store like Upstash so it holds across instances

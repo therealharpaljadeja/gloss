@@ -14,8 +14,7 @@ import { readApiKey } from "./ask";
  *    glyphs) are rendered and read by a vision model on the server
  *    (/api/pdf-page), a few at a time.
  *
- * Longer PDFs need the reader's own Fortytwo key: every question sends the
- * whole text, so a book would spend a day's free use in a few questions.
+ * Every question sends the whole text, so a long PDF costs more per answer.
  */
 
 export const PDF_FREE_PAGES = 20;
@@ -293,7 +292,7 @@ async function readByVision(lp: LP, bytes: Uint8Array, pageNums: number[], into:
       })
     );
   }
-  // Out of free use with nothing read at all: say so, rather than an empty text.
+  // No key, with nothing read at all: say so, rather than an empty text.
   if (stop && !into.size) throw stop;
 }
 

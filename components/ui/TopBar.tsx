@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { Library } from "lucide-react";
-import { Account } from "@/components/account/Account";
 import { Lockup } from "@/components/brand/Gloss";
 import { KeyMenu } from "@/components/ui/KeyMenu";
 import { SettingsMenu } from "@/components/ui/SettingsMenu";
@@ -31,7 +30,6 @@ export function TopBar({ here, onLibrary }: { here?: "library"; onLibrary?: () =
         </Link>
         <SettingsMenu compact />
         <KeyMenu />
-        <Account />
       </nav>
     </header>
   );

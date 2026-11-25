@@ -2,154 +2,119 @@
 
 import { useEffect, useState } from "react";
 import { KeyRound } from "lucide-react";
-import { validateKey } from "@/lib/ask";
+import { KEY_STORAGE, readKey, validateKey, type KeyName } from "@/lib/ask";
 import { BRAND } from "@/lib/brand";
 import { Popover, barBtn } from "./Popover";
 
-const STORAGE_KEY = "fortytwo:api-key";
+type Keys = Record<KeyName, string>;
 
-/** Today's free use of the shared key, as the share still unspent (0 to 1). */
-type Free = { left: number; signedIn: boolean };
+const FIELDS: { name: KeyName; label: string; note: string; placeholder: string; href: string; link: string }[] = [
+  { name: "fortytwo", label: "Fortytwo", note: "Required. Every answer, brief and scanned page runs on it.", placeholder: "Fortytwo API key", href: BRAND.keysUrl, link: "Get a key" },
+  { name: "exa", label: "Exa", note: "Optional. Lets answers search the web.", placeholder: "Exa API key", href: "https://dashboard.exa.ai/api-keys", link: "Get a key" },
+  { name: "llama", label: "LlamaParse", note: "Optional. Reads hard PDFs again, more carefully.", placeholder: "LlamaParse API key", href: "https://cloud.llamaindex.ai/api-key", link: "Get a key" },
+];
 
-/** Bring your own Fortytwo key. Stored in this browser only. A little reading a day is free without one. */
+const readAll = (): Keys => ({ fortytwo: readKey("fortytwo"), exa: readKey("exa"), llama: readKey("llama") });
+
+function store(name: KeyName, v: string) {
+  try {
+    if (v) localStorage.setItem(KEY_STORAGE[name], v);
+    else localStorage.removeItem(KEY_STORAGE[name]);
+  } catch {}
+}
+
+/** The reader's own keys: Fortytwo to use the app, Exa and LlamaParse if they want them. Stored in this browser only. */
 export function KeyMenu() {
-  const [key, setKey] = useState("");
-  const [house, setHouse] = useState<boolean | null>(null);
-  const [free, setFree] = useState<Free | null>(null);
-
-  useEffect(() => {
-    try {
-      setKey(localStorage.getItem(STORAGE_KEY) ?? "");
-    } catch {}
-    fetch("/api/key")
-      .then((r) => r.json())
-      .then((j: { house?: boolean; free?: Free | null }) => {
-        setHouse(Boolean(j.house));
-        setFree(j.free ?? null);
-      })
-      .catch(() => setHouse(false));
-    // Every answer on the shared key reports what is left.
-    const onFree = (e: Event) => setFree((f) => (f ? { ...f, left: (e as CustomEvent<number>).detail } : f));
-    window.addEventListener("gloss:free", onFree);
-    return () => window.removeEventListener("gloss:free", onFree);
-  }, []);
-
-  const spent = house === false || free?.left === 0;
-  const status = key ? "Your key" : spent ? "Add a key" : free && free.left <= 0.25 ? "Low on free use" : null;
+  const [keys, setKeys] = useState<Keys>({ fortytwo: "", exa: "", llama: "" });
+  useEffect(() => setKeys(readAll()), []);
+  const ready = Boolean(keys.fortytwo);
 
   return (
     <Popover
-      label="Fortytwo API key"
-      tip={key ? "Using your Fortytwo key" : "Add your Fortytwo key"}
-      width={320}
+      label="API keys"
+      tip={ready ? "Your API keys" : "Add your Fortytwo key"}
+      width={340}
       triggerClass={barBtn}
       openOn="gloss:key"
       trigger={
         <>
-          {key ? <span aria-hidden className="size-1.5 rounded-full bg-good" /> : <KeyRound size={15} aria-hidden />}
-          {status && <span className="hidden sm:inline">{status}</span>}
+          {ready ? <span aria-hidden className="size-1.5 rounded-full bg-good" /> : <KeyRound size={15} aria-hidden />}
+          {!ready && <span className="hidden sm:inline">Add a key</span>}
         </>
       }
     >
-      {(close) => <KeyPanel current={key} house={house} free={free} onSave={(v) => setKey(v)} close={close} />}
+      {(close) => <KeyPanel current={keys} onSave={setKeys} close={close} />}
     </Popover>
   );
 }
 
-function KeyPanel({ current, house, free, onSave, close }: { current: string; house: boolean | null; free: Free | null; onSave: (v: string) => void; close: () => void }) {
-  const [draft, setDraft] = useState(current);
+function KeyPanel({ current, onSave, close }: { current: Keys; onSave: (k: Keys) => void; close: () => void }) {
+  const [draft, setDraft] = useState<Keys>(current);
   const [state, setState] = useState<"idle" | "checking" | "bad">("idle");
 
   const save = async () => {
-    const v = draft.trim();
-    if (!v) {
-      try {
-        localStorage.removeItem(STORAGE_KEY);
-      } catch {}
-      onSave("");
-      close();
-      return;
+    const next: Keys = { fortytwo: draft.fortytwo.trim(), exa: draft.exa.trim(), llama: draft.llama.trim() };
+    if (next.fortytwo && next.fortytwo !== current.fortytwo) {
+      setState("checking");
+      if (!(await validateKey(next.fortytwo))) return setState("bad");
     }
-    setState("checking");
-    const ok = await validateKey(v);
-    if (!ok) {
-      setState("bad");
-      return;
-    }
-    try {
-      localStorage.setItem(STORAGE_KEY, v);
-    } catch {}
-    onSave(v);
+    for (const f of FIELDS) store(f.name, next[f.name]);
+    onSave(next);
+    window.dispatchEvent(new Event("gloss:keys"));
     close();
   };
 
   return (
     <div>
-      <p className="text-[13.5px] font-medium text-ink">Your Fortytwo API key</p>
-      <p className="mt-1 text-[12.5px] leading-snug text-ink-3">
-        {current
-          ? "Answers use your key, with no daily limit."
-          : house && free
-            ? `Free use resets each day${free.signedIn ? "" : ", and signing in doubles it"}. After that, answers need your key.`
-            : "Add your key to start asking."}
-      </p>
-      {!current && house && free && (
-        <div className="mt-3">
-          <div className="flex items-baseline justify-between text-[11.5px] text-ink-3">
-            <span>Free today</span>
-            <span className="tabular-nums">{free.left > 0 ? `${Math.max(1, Math.round(free.left * 100))}% left` : "Used up"}</span>
-          </div>
-          <span className="mt-1.5 block h-[3px] overflow-hidden rounded-full bg-rule" aria-hidden>
-            <span className="block h-full rounded-full bg-[var(--rubric)] transition-[width] duration-500" style={{ width: `${Math.round(free.left * 100)}%` }} />
-          </span>
-        </div>
-      )}
-      <input
-        autoFocus
-        type="password"
-        value={draft}
-        onChange={(e) => {
-          setDraft(e.target.value);
-          setState("idle");
-        }}
-        onKeyDown={(e) => e.key === "Enter" && save()}
-        placeholder="tgp_v1_..."
-        autoComplete="off"
-        spellCheck={false}
-        aria-label="Fortytwo API key"
-        className="mt-3 h-9 w-full rounded-lg border border-rule bg-bg px-3 text-[13px] tracking-wide text-ink outline-none focus-visible:outline-none placeholder:text-ink-4 focus:border-rule-strong"
-      />
-      {state === "bad" && <p className="mt-2 text-[12.5px] text-rubric-text">Fortytwo rejected that key. Check it and try again.</p>}
-      <p className="mt-2 text-[11.5px] leading-snug text-ink-4">Sent with your requests only. Stored in this browser, never on a server, never logged.</p>
-      <div className="mt-3 flex items-center justify-between">
-        <a href={BRAND.keysUrl} target="_blank" rel="noopener noreferrer" className="text-[12.5px] text-rubric-text underline decoration-rule-strong underline-offset-4">
-          Get a key on Fortytwo
-        </a>
-        <div className="flex gap-1.5">
-          {current && (
-            <button
-              type="button"
-              onClick={() => {
-                setDraft("");
-                try {
-                  localStorage.removeItem(STORAGE_KEY);
-                } catch {}
-                onSave("");
+      <p className="text-[13.5px] font-medium text-ink">Your API keys</p>
+      <p className="mt-1 text-[12.5px] leading-snug text-ink-3">Gloss runs on your own keys, with no limits of its own.</p>
+      <div className="mt-3 space-y-3">
+        {FIELDS.map((f, i) => (
+          <label key={f.name} className="block">
+            <span className="flex items-baseline justify-between gap-2">
+              <span className="text-[12.5px] font-medium text-ink-2">{f.label}</span>
+              <a href={f.href} target="_blank" rel="noopener noreferrer" className="text-[11.5px] text-rubric-text underline decoration-rule-strong underline-offset-4">
+                {f.link}
+              </a>
+            </span>
+            <input
+              autoFocus={i === 0}
+              type="password"
+              value={draft[f.name]}
+              onChange={(e) => {
+                setDraft((d) => ({ ...d, [f.name]: e.target.value }));
+                if (f.name === "fortytwo") setState("idle");
               }}
-              className="h-8 rounded-lg px-3 text-[12.5px] font-medium text-ink-2 hover:bg-sunk"
-            >
-              Clear
-            </button>
-          )}
+              onKeyDown={(e) => e.key === "Enter" && save()}
+              placeholder={f.placeholder}
+              autoComplete="off"
+              spellCheck={false}
+              aria-label={`${f.label} API key`}
+              className="mt-1 h-9 w-full rounded-lg border border-rule bg-bg px-3 text-[13px] tracking-wide text-ink outline-none focus-visible:outline-none placeholder:text-ink-4 focus:border-rule-strong"
+            />
+            <span className="mt-1 block text-[11.5px] leading-snug text-ink-4">{f.note}</span>
+          </label>
+        ))}
+      </div>
+      {state === "bad" && <p className="mt-2 text-[12.5px] text-rubric-text">Fortytwo rejected that key. Check it and try again.</p>}
+      <p className="mt-3 text-[11.5px] leading-snug text-ink-4">Sent with your requests only. Stored in this browser, never on a server, never logged.</p>
+      <div className="mt-3 flex justify-end gap-1.5">
+        {(current.fortytwo || current.exa || current.llama) && (
           <button
             type="button"
-            onClick={save}
-            disabled={state === "checking"}
-            className="h-8 rounded-lg bg-ink px-3.5 text-[12.5px] font-medium text-bg disabled:opacity-60"
+            onClick={() => {
+              for (const f of FIELDS) store(f.name, "");
+              setDraft({ fortytwo: "", exa: "", llama: "" });
+              onSave({ fortytwo: "", exa: "", llama: "" });
+            }}
+            className="h-8 rounded-lg px-3 text-[12.5px] font-medium text-ink-2 hover:bg-sunk"
           >
-            {state === "checking" ? "Checking" : "Save"}
+            Clear all
           </button>
-        </div>
+        )}
+        <button type="button" onClick={save} disabled={state === "checking"} className="h-8 rounded-lg bg-ink px-3.5 text-[12.5px] font-medium text-bg disabled:opacity-60">
+          {state === "checking" ? "Checking" : "Save"}
+        </button>
       </div>
     </div>
   );

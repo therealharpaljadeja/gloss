@@ -1,6 +1,5 @@
 "use client";
 
-import { Show, SignInButton } from "@clerk/nextjs";
 import { forwardRef, useEffect, useRef, useState, type CSSProperties } from "react";
 import { ArrowUp, Check, ChevronsDownUp, Copy, CornerDownRight, RotateCcw, Square, Trash2 } from "lucide-react";
 import { ACTIONS } from "@/lib/actions";
@@ -43,7 +42,7 @@ function Receipt({ t }: { t: Turn }) {
 }
 
 
-/** Free answers are spent: the way to keep going is the reader's own key, or, signed out, signing in for more. */
+/** No key yet: the way to start is the reader's own key. */
 function KeyButton() {
   return (
     <span className="mt-2.5 flex flex-wrap items-center gap-2">
@@ -54,13 +53,6 @@ function KeyButton() {
       >
         Add your Fortytwo key
       </button>
-      <Show when="signed-out">
-        <SignInButton mode="modal">
-          <button type="button" className="inline-flex h-8 items-center rounded-lg border border-rule px-3.5 text-[12.5px] font-medium text-ink-2 transition-colors hover:border-rule-strong hover:text-ink">
-            Sign in
-          </button>
-        </SignInButton>
-      </Show>
     </span>
   );
 }

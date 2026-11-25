@@ -1,6 +1,5 @@
 "use client";
 
-import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TopBar } from "@/components/ui/TopBar";
@@ -19,11 +18,8 @@ import { LibraryLine, type Saved } from "./LibraryLine";
 import { ShelfSheet, type ShelfItem } from "./ShelfSheet";
 
 /** One screen: a headline that shows what it does, a place to paste, and your shelf. */
-export function Landing({ signedIn: signedInAtLoad = false }: { signedIn?: boolean }) {
+export function Landing() {
   const router = useRouter();
-  // Known on the server at load, so a signed-in reader never sees the demo flash; then live, for a sign-in from this page.
-  const { isLoaded, isSignedIn } = useAuth();
-  const signedIn = isLoaded ? Boolean(isSignedIn) : signedInAtLoad;
   const hydrate = useStore((s) => s.hydrate);
   const hydrated = useStore((s) => s.hydrated);
   const library = useStore((s) => s.library);
@@ -255,7 +251,7 @@ export function Landing({ signedIn: signedInAtLoad = false }: { signedIn?: boole
             <LibraryLine saved={saved} />
           </Hero>
         </div>
-        <HomeBelow signedIn={signedIn} />
+        <HomeBelow />
       </main>
 
       <ShelfSheet

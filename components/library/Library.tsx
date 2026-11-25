@@ -1,6 +1,5 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { startTransition, useCallback, useEffect, useMemo, useRef, useState, ViewTransition } from "react";
 import { ChevronLeft, ChevronRight, LayoutGrid, Library as LibraryIcon, Search, X } from "lucide-react";
@@ -13,7 +12,6 @@ import { SAMPLES } from "@/lib/samples";
 import { applySettings } from "@/lib/settings";
 import { backfill } from "@/lib/shelving";
 import { useStore } from "@/lib/store";
-import { watchShelf } from "@/lib/sync";
 import { AddButton, AddPanel, type AddTab } from "./AddPanel";
 import { Arrivals, type Wave } from "./Arrivals";
 import { Glyph } from "./Book";
@@ -37,7 +35,6 @@ const SAMPLES_UNTIL = 6;
  */
 export function Library() {
   const router = useRouter();
-  const { user, isSignedIn } = useUser();
   const hydrate = useStore((s) => s.hydrate);
   const hydrated = useStore((s) => s.hydrated);
   const library = useStore((s) => s.library);
@@ -78,9 +75,6 @@ export function Library() {
     waveTimer.current = setTimeout(() => setWave(null), 240);
   }, []);
   useEffect(() => () => clearTimeout(waveTimer.current), []);
-
-  // Signed in, the shelf is checked every few seconds while it's open, so an agent's saves arrive as you look.
-  useEffect(() => watchShelf(), []);
 
   // The top bar frosts over once the page moves under it.
   const [scrolled, setScrolled] = useState(false);
@@ -235,8 +229,7 @@ export function Library() {
   );
 
   const openBook = open ? books.find((b) => b.id === open.id) ?? null : null;
-  const first = user?.firstName;
-  const owner = user?.fullName || first || "A Gloss reader";
+  const owner = "A Gloss reader";
   const T = topic ? TOPIC[topic] : null;
   const topicBooks = useMemo(() => (topic ? books.filter((b) => b.topic === topic).sort((a, b) => b.added - a.added).filter(match) : []), [topic, books, match]);
   const screen = topic ? `topic-${topic}` : view;
@@ -277,7 +270,7 @@ export function Library() {
           <section className="lib-hero">
             <div className="lib-hero-row">
               <div className="min-w-0">
-                <h1 className="lib-title">{first ? `${first}'s library` : "Your library"}</h1>
+                <h1 className="lib-title">Your library</h1>
                 {/* Its height is kept while the shelf is read, so the tools below never jump. */}
                 <p className="lib-stats">
                   {hydrated && (
@@ -307,14 +300,8 @@ export function Library() {
                   )}
                 </p>
               </div>
-              <AddButton onClick={() => setAdding("agent")} />
+              <AddButton onClick={() => setAdding("links")} />
             </div>
-            {fromAgent.length > 0 && (
-              <button type="button" className="lib-news" onClick={() => (setTag("agent"), setOnly(null), go({ view: "shelf" }))}>
-                <Glyph k="agent" size={22} />
-                {fromAgent.length} new from your agent since you last looked
-              </button>
-            )}
           </section>
         )}
 
@@ -323,7 +310,7 @@ export function Library() {
             <button type="button" onClick={() => go({ view: "topics" })} className="lib-back">
               <ChevronLeft size={16} /> All topics
             </button>
-            <AddButton compact onClick={() => setAdding("agent")} />
+            <AddButton compact onClick={() => setAdding("links")} />
           </div>
         ) : (
           <div className="lib-tools">
@@ -388,7 +375,7 @@ export function Library() {
                   <p className="py-6 text-center text-[14px] text-ink-3">Nothing on the shelves matches{q ? <> &ldquo;{q}&rdquo;</> : ""}.</p>
                 )}
                 {hydrated && own.length < SAMPLES_UNTIL ? (
-                  <Starter count={own.length} signedIn={Boolean(isSignedIn)} onAdd={setAdding} />
+                  <Starter count={own.length} onAdd={setAdding} />
                 ) : (
                   hydrated && <p className="lib-hint">Click a spine to take it down. Arrow keys walk the shelf.</p>
                 )}
@@ -441,7 +428,7 @@ export function Library() {
           }}
         />
       )}
-      {adding && <AddPanel tab={adding} onTab={setAdding} onClose={() => setAdding(null)} signedIn={Boolean(isSignedIn)} />}
+      {adding && <AddPanel onClose={() => setAdding(null)} />}
     </div>
   );
 }
