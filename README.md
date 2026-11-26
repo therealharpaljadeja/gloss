@@ -11,6 +11,8 @@
   <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ftherealharpaljadeja%2Fgloss&project-name=gloss&repository-name=gloss"><img src="https://vercel.com/button" alt="Deploy with Vercel"></a>
 </p>
 
+New to Gloss? Read the [getting started guide](GETTING_STARTED.md).
+
 ## Tech stack
 
 - [DeepSeek V4.1 Flash](https://docs.fortytwo.network/docs/models) for the LLM
