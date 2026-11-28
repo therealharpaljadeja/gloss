@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Atkinson_Hyperlegible_Next, Inter, JetBrains_Mono, Literata, Newsreader } from "next/font/google";
 import { BOOT_SCRIPT } from "@/lib/settings";
+import "katex/dist/katex.min.css";
 import "./globals.css";
 import { Tooltips } from "@/components/ui/Tooltips";
 import { OG_IMAGE, SITE_URL } from "@/lib/brand";

@@ -1,4 +1,4 @@
-import { undash, type Block, type BlockType, type Run } from "./article";
+import { splitMath, undash, type Block, type BlockType, type Run } from "./article";
 
 /**
  * Walks a cleaned article DOM (Readability output) into Gloss blocks.
@@ -147,16 +147,21 @@ function inlineRuns(node: El, marks: Omit<Run, "text"> = {}, out: Run[] = []): R
 }
 
 function tidyRuns(runs: Run[]): Run[] {
-  // Merge neighbours with identical marks, collapse whitespace, trim the ends.
-  const merged: Run[] = [];
+  // Merge neighbours with identical marks, set formulas apart, collapse whitespace, trim the ends.
+  const joined: Run[] = [];
   for (const r of runs) {
-    const prev = merged[merged.length - 1];
+    const prev = joined[joined.length - 1];
     if (prev && prev.em === r.em && prev.strong === r.strong && prev.code === r.code && prev.href === r.href) prev.text += r.text;
-    else merged.push({ ...r });
+    else joined.push({ ...r });
   }
+  const merged = splitMath(joined);
   // Typographic quotes, using the previous run's last character as context.
   let prev = " ";
   for (const r of merged) {
+    if (r.tex) {
+      prev = "x";
+      continue;
+    }
     let t = undash(r.text.replace(/\s+/g, " "));
     if (!r.code) {
       let out = "";
