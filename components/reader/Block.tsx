@@ -3,6 +3,7 @@
 import { memo, useState, type ReactNode } from "react";
 import { MessageCirclePlus } from "lucide-react";
 import type { Block as BlockT, Run } from "@/lib/article";
+import { texToHtml } from "@/lib/katex";
 
 /** `note`: a highlight with the reader's note, set only in the block where it ends. */
 export type Mark = { from: number; to: number; kind: "gloss" | "hl" | "pending"; id: string; color?: string; note?: boolean };
@@ -23,7 +24,18 @@ type Props = {
   onAsk: (blockId: string) => void;
 };
 
-function wrapRun(run: Run, text: string, key: string): ReactNode {
+/**
+ * A formula is drawn once, by the piece that starts it. Its plain text stays in
+ * the DOM, visually hidden, so offsets, selection and screen readers see text.
+ */
+function wrapRun(run: Run, text: string, key: string, starts = true): ReactNode {
+  if (run.tex)
+    return (
+      <span key={key} className="m-run" data-display={run.display ? "" : undefined}>
+        <span className="m-src">{text}</span>
+        {starts && <span className="m-tex" aria-hidden dangerouslySetInnerHTML={{ __html: texToHtml(run.tex, !!run.display) }} />}
+      </span>
+    );
   let node: ReactNode = text;
   if (run.code) node = <code>{node}</code>;
   if (run.strong) node = <strong>{node}</strong>;
@@ -70,8 +82,9 @@ function segments(block: BlockT, marks: Mark[], activeGloss: string | null, hove
     const text = run.text.slice(a - bounds[ri], b - bounds[ri]);
     const covering = marks.filter((m) => m.from <= a && m.to >= b);
     const key = `${a}`;
+    const starts = a === bounds[ri];
     if (!covering.length) {
-      out.push(wrapRun(run, text, key));
+      out.push(wrapRun(run, text, key, starts));
       continue;
     }
     const g = covering.filter((m) => m.kind === "gloss").map((m) => m.id);
@@ -92,7 +105,7 @@ function segments(block: BlockT, marks: Mark[], activeGloss: string | null, hove
       .join(" ");
     out.push(
       <span key={key} className={cls} data-g={g.length ? g.join(" ") : undefined} data-h={h.length ? h.join(" ") : undefined} data-c={color && color !== "yellow" ? color : undefined}>
-        {wrapRun(run, text, "r")}
+        {wrapRun(run, text, "r", starts)}
       </span>
     );
     // Empty and drawn by CSS, so it adds no characters and offsets stay true.

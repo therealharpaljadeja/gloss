@@ -1889,3 +1889,32 @@ a.desk-tile:focus-visible {
     vertical-align: middle;
   }
 }
+
+/* Formulas: KaTeX draws them; the plain text beside them is kept for offsets and screen readers. */
+.m-run {
+  position: relative;
+}
+.m-src {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  user-select: none;
+}
+.m-run[data-display] {
+  display: block;
+  text-indent: 0;
+}
+.m-run .katex {
+  font-size: 1.08em;
+}
+.m-run .katex-display {
+  margin: 0.4em 0;
+  padding: 0.2em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}

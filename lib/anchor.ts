@@ -14,6 +14,19 @@ export const textEl = (blockId: string): HTMLElement | null =>
 export const blockEl = (blockId: string): HTMLElement | null =>
   document.querySelector<HTMLElement>(`[data-block="${CSS.escape(blockId)}"]`);
 
+/** Text that counts toward offsets. A formula's drawn glyphs (.m-tex) don't; its plain text (.m-src) does. */
+const counted = (el: HTMLElement) =>
+  document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+    acceptNode: (n) => (n.parentElement?.closest(".m-tex") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT),
+  });
+
+const plainLength = (el: HTMLElement) => {
+  const w = counted(el);
+  let n = 0;
+  while (w.nextNode()) n += w.currentNode.textContent?.length ?? 0;
+  return n;
+};
+
 function offsetWithin(el: HTMLElement, node: Node, offset: number): number {
   const r = document.createRange();
   r.selectNodeContents(el);
@@ -22,7 +35,15 @@ function offsetWithin(el: HTMLElement, node: Node, offset: number): number {
   } catch {
     return 0;
   }
-  return r.toString().length;
+  const w = counted(el);
+  let n = 0;
+  while (w.nextNode()) {
+    const t = w.currentNode;
+    if (t === node) return n + offset;
+    if (!r.intersectsNode(t)) break;
+    n += t.textContent?.length ?? 0;
+  }
+  return n;
 }
 
 function pointFor(node: Node, offset: number, edge: "start" | "end", root: HTMLElement): Point | null {
@@ -33,7 +54,7 @@ function pointFor(node: Node, offset: number, edge: "start" | "end", root: HTMLE
     if (!t) return null;
     if (t.contains(node)) return { b: blk.dataset.block!, o: offsetWithin(t, node, offset) };
     // In the paragraph number or padding: snap to the edge of the text.
-    return { b: blk.dataset.block!, o: edge === "start" ? 0 : (t.textContent ?? "").length };
+    return { b: blk.dataset.block!, o: edge === "start" ? 0 : plainLength(t) };
   }
   return null;
 }
@@ -97,7 +118,7 @@ export function quoteFor(a: { start: Point; end: Point }, texts: Map<string, str
 }
 
 function locate(el: HTMLElement, offset: number): { node: Node; offset: number } {
-  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const walker = counted(el);
   let seen = 0;
   let last: Node | null = null;
   while (walker.nextNode()) {
